@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnBoarding from "../screens/OnBoarding/onBoarding";
 import Login from "../screens/OnBoarding/auth/login";
 import SignUp from "../screens/OnBoarding/auth/signup";
-import GetDetails from "../screens/OnBoarding/auth/getPersonalDetails/getPersonalDetails";
+import GetDetails from "../screens/OnBoarding/auth/getPersonalDetails/getDetails";
 import { AuthStackParamList } from "./type";
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();

@@ -37,7 +37,10 @@ const Picker: React.FC<props> = ({
             >
                 <View
                     style={{
-                        backgroundColor: colors.card,
+                        backgroundColor: HexToHexa({
+                            hex: colors.background,
+                            alpha: 0.97,
+                        }),
                         borderWidth: 0.5,
                         borderColor: colors.secondary,
                         alignItems: "center",
@@ -75,8 +78,14 @@ const Picker: React.FC<props> = ({
                                     borderColor: colors.secondary,
                                     backgroundColor:
                                         selectedValue === val
-                                            ? colors.primary
-                                            : colors.card,
+                                            ? HexToHexa({
+                                                  hex: colors.primary,
+                                                  alpha: 1,
+                                              })
+                                            : HexToHexa({
+                                                  hex: colors.background,
+                                                  alpha: 0,
+                                              }),
                                     borderTopLeftRadius: i === 0 ? WP(2) : 0,
                                     borderTopRightRadius: i === 1 ? WP(2) : 0,
                                 }}

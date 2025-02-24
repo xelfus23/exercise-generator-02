@@ -66,6 +66,7 @@ const Styles = () => {
             alignItems: "center",
             width: WP(40),
             height: HP(6),
+            borderRadius: WP(4),
         },
 
         //Secondary ---------------------------------------------------------------------------

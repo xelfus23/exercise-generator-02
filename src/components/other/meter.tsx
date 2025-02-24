@@ -1,4 +1,5 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
+import { OutfitRegular } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { AntDesign } from "@expo/vector-icons";
@@ -10,20 +11,31 @@ interface props {
     options: any;
     itemWidth: number;
     loading: boolean;
+    unit: string;
 }
-const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
+const Meter: React.FC<props> = ({
+    scroll,
+    options,
+    itemWidth,
+    loading,
+    unit,
+}) => {
     const colors = useThemeColors();
 
     return (
-        <View style={{ alignItems: "center" }}>
-            <AntDesign name="caretdown" size={HP(1.5)} color={colors.text} />
-
-            <View
-                style={{
-                    height: HP(10),
-                    overflow: "hidden",
-                }}
-            >
+        <View
+            style={{
+                width: Math.round(WP(100)),
+                alignItems: "flex-start",
+            }}
+        >
+            <AntDesign
+                name="caretdown"
+                size={HP(1.5)}
+                color={colors.text}
+                style={{ paddingLeft: Math.round(WP(30)) }}
+            />
+            <View style={{ height: HP(10), overflow: "hidden" }}>
                 <LinearGradient
                     colors={[
                         colors.background,
@@ -43,15 +55,16 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                         horizontal
                         snapToInterval={itemWidth}
                         style={{
-                            width: WP(81.5),
+                            width: Math.round(WP(100)), // Use full width
                         }}
                         contentContainerStyle={{
-                            justifyContent: "center",
-                            paddingHorizontal: WP(39.4),
+                            paddingLeft: WP(30),
+                            paddingRight: WP(70) - itemWidth,
                         }}
                         onMomentumScrollEnd={scroll}
                         showsHorizontalScrollIndicator={false}
                         disableScrollViewPanResponder={loading}
+                        decelerationRate={0.989} // Add decelerationRate
                     >
                         {options.map((value: any, index: number) => (
                             <View
@@ -64,8 +77,7 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                                 <View
                                     style={{
                                         flexDirection: "row",
-                                        justifyContent: "space-around",
-                                        width: "100%",
+                                        justifyContent: "space-between",
                                     }}
                                 >
                                     <Text
@@ -76,7 +88,7 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                                                     : index % 5 === 0
                                                     ? HP(2.5)
                                                     : HP(1.8),
-                                            color: colors.text,
+                                            color: colors.text, // Highlight selected
                                             top:
                                                 index % 10 === 0
                                                     ? -HP(0.4)
@@ -84,7 +96,7 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                                                     ? -HP(0.3)
                                                     : -HP(0.1),
                                             opacity: 0.8,
-                                            fontFamily: "Outfit-Regular",
+                                            fontFamily: OutfitRegular,
                                         }}
                                     >
                                         |
@@ -92,18 +104,18 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                                 </View>
                                 <Text
                                     style={{
-                                        color: colors.text,
+                                        color: colors.text, // Highlight selected
+                                        width: WP(15),
                                         fontSize:
                                             index % 10 === 0
-                                                ? HP(1.8)
+                                                ? HP(1.5)
                                                 : HP(1.5),
-                                        width: WP(15),
-                                        fontFamily: "Outfit-Regular",
+                                        fontFamily: OutfitRegular,
                                         textAlign: "center",
                                     }}
                                 >
                                     {index % 10 === 0
-                                        ? Math.floor(value.value) + "cm"
+                                        ? Math.floor(value.value) + unit
                                         : ""}
                                 </Text>
                             </View>
@@ -111,7 +123,12 @@ const Meter: React.FC<props> = ({ scroll, options, itemWidth, loading }) => {
                     </ScrollView>
                 </LinearGradient>
             </View>
-            <AntDesign name="caretup" size={HP(1.5)} color={colors.text} />
+            <AntDesign
+                name="caretup"
+                size={HP(1.5)}
+                color={colors.text}
+                style={{ paddingLeft: Math.round(WP(30)) }}
+            />
         </View>
     );
 };

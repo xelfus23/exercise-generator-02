@@ -1,31 +1,19 @@
-import { useThemeColors } from "@/src/hooks/useThemeColor";
-import { useAuth } from "@/src/services/auth/authentication";
-import { Text, TouchableOpacity, View, Animated } from "react-native";
-import { WP, HP } from "@/src/hooks/useDeviceDimension";
-import { Image } from "expo-image";
-import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
-import HexToHexa from "@/src/hooks/useHexa";
 import SingleButton from "@/src/components/buttons/single-button";
-import { useEffect, useRef, useState } from "react";
-import { Fade } from "@/src/module/animations/fadeAnimation";
 import ScrollDown from "@/src/components/other/scrollDown";
-
+import { HP, WP } from "@/src/hooks/useDeviceDimension";
+import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import { useThemeColors } from "@/src/hooks/useThemeColor";
+import { Fade } from "@/src/module/animations/fadeAnimation";
+import { useRef, useState } from "react";
+import { Animated, Text, View } from "react-native";
 interface props {
-    gender: string;
-    setUserProfile: (v: any) => void;
     YOffset: Animated.Value;
-    setIndex: (v: number) => void;
+    setIndex: (index: number) => void;
 }
 
-const Gender: React.FC<props> = ({
-    gender,
-    setUserProfile,
-    YOffset,
-    setIndex,
-}) => {
-    const colors = useThemeColors();
-    const { user } = useAuth();
+const Place: React.FC<props> = ({ YOffset, setIndex }) => {
     const [submitted, setSubmitted] = useState(false);
+    const colors = useThemeColors();
 
     const fadeOut = useRef<Animated.Value>(new Animated.Value(1)).current;
     const fadeIn = useRef<Animated.Value>(new Animated.Value(0)).current;
@@ -48,7 +36,7 @@ const Gender: React.FC<props> = ({
             duration: 1000,
             after: () => {
                 setSubmitted(true);
-                setIndex(1);
+                setIndex(7);
                 Fade({
                     fromValue: fadeIn,
                     duration: 1000,
@@ -58,23 +46,6 @@ const Gender: React.FC<props> = ({
             },
             toValue: 0,
         });
-    };
-
-    const genderItems = [
-        {
-            label: "Male",
-            value: "male",
-            icon: require("@/src/assets/images/ui/human/male.png"),
-        },
-        {
-            label: "Female",
-            value: "female",
-            icon: require("@/src/assets/images/ui/human/female.png"),
-        },
-    ];
-
-    const handlePress = (v: any) => {
-        setUserProfile({ gender: v.value });
     };
 
     return !submitted ? (
@@ -88,50 +59,14 @@ const Gender: React.FC<props> = ({
         >
             <Text
                 style={{
-                    fontSize: HP(3),
-                    marginTop: HP(30),
                     color: colors.text,
                     fontFamily: OutfitRegular,
-                    maxWidth: WP(80),
+                    fontSize: HP(3),
+                    marginTop: HP(30),
                 }}
             >
-                What is your gender {user?.firstName}?
+                On what place you prefer doing your workout plan?
             </Text>
-            <View
-                style={{
-                    flexDirection: "row",
-                    padding: WP(4),
-                    gap: WP(8),
-                    justifyContent: "space-around",
-                }}
-            >
-                {genderItems.map((v, i) => (
-                    <TouchableOpacity
-                        key={i}
-                        style={{ alignItems: "center" }}
-                        onPress={() => handlePress(v as any)}
-                    >
-                        <Image
-                            source={v.icon}
-                            style={{
-                                height: HP(25),
-                                width: WP(30),
-                                opacity: gender === v.value ? 1 : 0.5,
-                            }}
-                            contentFit="contain"
-                        />
-                        <Text
-                            style={{
-                                color: colors.text,
-                                fontSize: HP(2),
-                            }}
-                        >
-                            {v.label}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
-
             <View
                 style={{
                     position: "absolute",
@@ -143,9 +78,8 @@ const Gender: React.FC<props> = ({
                 <SingleButton
                     loading={false}
                     style={{}}
-                    color={gender === "" ? colors.secondary : colors.primary}
+                    color={colors.primary}
                     onPress={submit}
-                    disabled={gender === ""}
                 >
                     <Text
                         style={{
@@ -186,4 +120,4 @@ const Gender: React.FC<props> = ({
     );
 };
 
-export default Gender;
+export default Place;

@@ -45,6 +45,7 @@ export default function RootLayout() {
         >
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar
+                    // translucent
                     backgroundColor={colors.background}
                     barStyle={
                         colorScheme !== "dark"

@@ -1,14 +1,4 @@
-import {
-    View,
-    ScrollView,
-    Modal,
-    Alert,
-    StatusBar,
-    Animated,
-    Text,
-    useColorScheme,
-    SafeAreaView,
-} from "react-native";
+import { View, Animated } from "react-native";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import { Image } from "expo-image";
@@ -20,8 +10,12 @@ import GridBackground from "@/src/components/other/grid-background";
 import BirthDate from "./screens/02-birthdate";
 import { OutfitRegular } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
-import Height from "./screens/04-height";
-import Weight from "./screens/05-weight";
+import Height from "./screens/03-height";
+import Weight from "./screens/04-weight";
+import MainGoals from "./screens/05-maingoals";
+import FitnesLevel from "./screens/06-fitnessLevel";
+import Place from "./screens/07-preferredPlace";
+import RestDay from "./screens/10-preferredRest";
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,11 +44,13 @@ const GetDetails: React.FC = () => {
         },
     });
 
-    const [fitnessLevel, setFitnessLevel] = useState("");
     const [fitnessGoal, setFitnessGoal] = useState({
         primaryGoal: "",
         secondaryGoals: [],
     });
+
+    const [fitnessLevel, setFitnessLevel] = useState("");
+
     const [targetWeight, setTargetWeight] = useState({
         value: 0,
         unit: "kg",
@@ -114,6 +110,29 @@ const GetDetails: React.FC = () => {
                 />
             ),
         },
+        {
+            label: "Main Goals",
+            screen: (
+                <MainGoals
+                    setFitnessGoals={setFitnessGoal}
+                    fitnessGoals={fitnessGoal}
+                    YOffset={YOffset}
+                    setIndex={setIndex}
+                />
+            ),
+        },
+        {
+            label: "Fitness Level",
+            screen: <FitnesLevel YOffset={YOffset} setIndex={setIndex} />,
+        },
+        {
+            label: "Place",
+            screen: <Place YOffset={YOffset} setIndex={setIndex} />,
+        },
+        {
+            label: "Rest Days",
+            screen: <RestDay YOffset={YOffset} setIndex={setIndex} />,
+        },
     ];
 
     const handleScroll = Animated.event(
@@ -137,8 +156,7 @@ const GetDetails: React.FC = () => {
         <View
             style={{
                 backgroundColor: colors.background,
-                flex: 1,
-                alignItems: "center",
+                height: HP(100),
             }}
         >
             <View
@@ -148,6 +166,7 @@ const GetDetails: React.FC = () => {
                     right: WP(2),
                     flexDirection: "row",
                     zIndex: 5,
+                    pointerEvents: "none",
                 }}
             >
                 <View
@@ -160,7 +179,7 @@ const GetDetails: React.FC = () => {
                         const changeColor = (i: number) => {
                             return YOffset.interpolate({
                                 inputRange: [HP(100) * (i - 1), HP(100) * i], // When to change color
-                                outputRange: [colors.secondary, colors.success], // Transition colors
+                                outputRange: [colors.card, colors.success], // Transition colors
                                 extrapolate: "clamp",
                             });
                         };
@@ -172,10 +191,10 @@ const GetDetails: React.FC = () => {
                                 style={{
                                     color: labelColor, // Use the interpolated value
                                     fontFamily: OutfitRegular,
-                                    fontSize: HP(1.2),
+                                    fontSize: HP(1),
                                 }}
                             >
-                                {v.label} —
+                                0{i + 1} —
                             </Animated.Text>
                         );
                     })}
@@ -183,14 +202,14 @@ const GetDetails: React.FC = () => {
                 <View
                     style={{
                         height: HP(80),
-                        width: WP(1),
+                        width: WP(0.1),
                         borderRadius: WP(100),
                         backgroundColor: colors.card,
                     }}
                 >
                     <Animated.View
                         style={{
-                            width: WP(1),
+                            width: WP(0.5),
                             height: progressBar,
                             backgroundColor: colors.success,
                             borderRadius: WP(100),
@@ -198,20 +217,18 @@ const GetDetails: React.FC = () => {
                     ></Animated.View>
                 </View>
             </View>
+
             <Animated.ScrollView
                 onScroll={handleScroll}
-                decelerationRate={0.998}
-                keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
-                style={{ height: HP(100) }}
+                snapToInterval={HP(100)}
+                contentContainerStyle={{ width: WP(100) }}
             >
                 {screens?.map(
                     (v, i) =>
                         i <= index && (
-                            <View key={i} style={{}}>
-                                <View style={{ zIndex: 1, height: HP(100) }}>
-                                    {v.screen}
-                                </View>
+                            <View key={i} style={{ height: HP(100) }}>
+                                {v.screen}
                                 {i < 3 && (
                                     <Animated.View
                                         style={{
@@ -220,7 +237,7 @@ const GetDetails: React.FC = () => {
                                             transform: [
                                                 { translateY: backgroundMove },
                                             ],
-                                            zIndex: 0,
+                                            zIndex: -1,
                                         }}
                                     >
                                         <GridBackground zIndex={0} />

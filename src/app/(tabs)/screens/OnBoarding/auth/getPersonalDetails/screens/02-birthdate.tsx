@@ -20,6 +20,7 @@ import { Fade } from "@/src/module/animations/fadeAnimation";
 import ScrollDown from "@/src/components/other/scrollDown";
 import { AntDesign } from "@expo/vector-icons";
 import Picker from "@/src/components/other/picker";
+import DatePicker from "@/src/components/other/datePicker";
 
 interface props {
     setUserProfile: (v: any) => void;
@@ -143,10 +144,6 @@ const BirthDate: React.FC<props> = ({
         );
     })();
 
-    useEffect(() => {
-        console.log("Days Array Updated:", daysArray);
-    }, [daysArray]);
-
     const moveScroll = YOffset.interpolate({
         inputRange: [HP(100), HP(200)], // Ensure the first value is smaller
         outputRange: [0, HP(20)],
@@ -216,236 +213,167 @@ const BirthDate: React.FC<props> = ({
         });
     };
 
-    return (
-        <View style={{ flex: 1 }}>
-            {!submitted ? (
-                <Animated.View
+    return !submitted ? (
+        <Animated.View
+            style={{
+                gap: HP(2),
+                padding: WP(4),
+                opacity: fadeOut,
+                flex: 1,
+            }}
+        >
+            <Text
+                style={{
+                    fontSize: HP(3),
+                    marginTop: HP(30),
+                    color: colors.text,
+                    fontFamily: OutfitRegular,
+                }}
+            >
+                Your date of birth
+            </Text>
+
+            <View
+                style={{
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                }}
+            >
+                <View
                     style={{
-                        gap: HP(2),
-                        padding: WP(4),
-                        opacity: fadeOut,
-                        flex: 1,
+                        padding: HP(1),
                     }}
                 >
-                    <Text
-                        style={{
-                            fontSize: HP(3),
-                            marginTop: HP(30),
-                            color: colors.text,
-                            fontFamily: OutfitRegular,
-                        }}
-                    >
-                        Your date of birth
-                    </Text>
-
                     <View
                         style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
                             alignItems: "center",
-                            flexWrap: "wrap",
+                            paddingVertical: HP(2),
                         }}
                     >
                         <View
                             style={{
-                                padding: HP(1),
+                                flexDirection: "row",
+                                gap: WP(4),
                             }}
                         >
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    paddingVertical: HP(2),
-                                    // backgroundColor: HexToHexa({
-                                    //     hex: colors.secondary,
-                                    //     alpha: 0.2,
-                                    // }),
-                                }}
+                            <TouchableOpacity onPress={showYearPicker}>
+                                <Text style={getYearTextStyle() as any}>{` ${
+                                    selectedYear || "Year"
+                                }`}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={showMonthPicker}
+                                disabled={!selectedYear}
                             >
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        gap: WP(4),
-                                        paddingHorizontal: WP(4),
-                                    }}
-                                >
-                                    <TouchableOpacity onPress={showYearPicker}>
-                                        <Text
-                                            style={getYearTextStyle() as any}
-                                        >{` ${selectedYear || "Year"}`}</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={showMonthPicker}
-                                        disabled={!selectedYear}
-                                    >
-                                        <Text
-                                            style={getMonthTextStyle() as any}
-                                        >{`${
-                                            selectedMonth
-                                                ? selectedMonth
-                                                : "Month"
-                                        }`}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            {/* Days of the Week */}
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    justifyContent: "space-around",
-                                    paddingVertical: WP(4),
-                                }}
-                            >
-                                {daysOfWeek.map((day) => (
-                                    <Text
-                                        key={day}
-                                        style={{
-                                            width: "14.28%",
-                                            textAlign: "center",
-                                            fontFamily: "Outfit-Bold",
-                                            color:
-                                                selectedMonth === null
-                                                    ? HexToHexa({
-                                                          hex: colors.secondary,
-                                                          alpha: 0.2,
-                                                      })
-                                                    : colors.text,
-                                        }}
-                                    >
-                                        {day}
-                                    </Text>
-                                ))}
-                            </View>
-
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    flexWrap: "wrap",
-                                }}
-                            >
-                                {daysArray.map((day, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={{
-                                            width: "14.28%",
-                                            aspectRatio: 1,
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            marginVertical: HP(0.5),
-                                            backgroundColor:
-                                                selectedMonth && selectedDate
-                                                    ? selectedDate === day
-                                                        ? colors.primary
-                                                        : "transparent"
-                                                    : "transparent",
-                                            borderRadius: selectedMonth
-                                                ? selectedDate === day
-                                                    ? WP(2)
-                                                    : 0
-                                                : 0,
-                                        }}
-                                        onPress={() =>
-                                            day && handleDayPress(day)
-                                        }
-                                        disabled={
-                                            !day || selectedMonth === null
-                                        }
-                                    >
-                                        <Text
-                                            style={{
-                                                fontSize: HP(1.5),
-                                                color: selectedMonth
-                                                    ? selectedDate === day
-                                                        ? colors.white
-                                                        : HexToHexa({
-                                                              hex: colors.text,
-                                                              alpha: 0.5,
-                                                          })
-                                                    : HexToHexa({
-                                                          hex: colors.text,
-                                                          alpha: 0.2,
-                                                      }),
-                                                fontFamily: "Outfit-Regular",
-                                            }}
-                                        >
-                                            {day || ""}
-                                        </Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
+                                <Text style={getMonthTextStyle() as any}>{`${
+                                    selectedMonth ? selectedMonth : "Month"
+                                }`}</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
+                    {/* Days of the Week */}
                     <View
                         style={{
-                            width: WP(100),
-                            alignItems: "center",
-                            position: "absolute",
-                            bottom: HP(2),
+                            flexDirection: "row",
+                            justifyContent: "space-around",
+                            paddingVertical: WP(4),
                         }}
                     >
-                        <SingleButton
-                            loading={false}
-                            style={{}}
-                            color={
-                                selectedDate ? colors.primary : colors.secondary
-                            }
-                            onPress={submit}
-                            // disabled={!selectedDate}
-                        >
+                        {daysOfWeek.map((day) => (
                             <Text
+                                key={day}
                                 style={{
-                                    color: colors.white,
-                                    fontSize: HP(2),
-                                    fontFamily: OutfitBold,
+                                    width: "14.28%",
+                                    textAlign: "center",
+                                    fontFamily: "Outfit-Bold",
+                                    color:
+                                        selectedMonth === null
+                                            ? HexToHexa({
+                                                  hex: colors.secondary,
+                                                  alpha: 0.2,
+                                              })
+                                            : colors.text,
                                 }}
                             >
-                                Next
+                                {day}
                             </Text>
-                        </SingleButton>
+                        ))}
                     </View>
 
-                    <Picker
-                        isVisible={isMonthPickerVisible}
-                        items={monthNames}
-                        setIsVisible={setMonthPickerVisible}
-                        selectedValue={selectedMonth}
-                        setSelectedValue={setSelectedMonth}
+                    <DatePicker
+                        items={daysArray}
+                        selectedDate={selectedDate}
+                        selectedMonth={selectedMonth}
+                        handlePress={handleDayPress}
                     />
-                    <Picker
-                        isVisible={isYearPickerVisible}
-                        items={generateYears(
-                            currentYear - 71,
-                            currentYear
-                        ).reverse()}
-                        setIsVisible={setYearPickerVisible}
-                        selectedValue={selectedYear}
-                        setSelectedValue={setSelectedYear}
-                    />
-                </Animated.View>
-            ) : (
-                <Animated.View
-                    style={{
-                        padding: WP(4),
-                        gap: HP(4),
-                        height: HP(100),
-                        opacity: fadeIn,
-                        justifyContent: "center",
-                    }}
+                </View>
+            </View>
+
+            <View
+                style={{
+                    width: WP(100),
+                    position: "absolute",
+                    bottom: HP(4),
+                    alignItems: "center",
+                }}
+            >
+                <SingleButton
+                    loading={false}
+                    style={{}}
+                    color={selectedDate ? colors.primary : colors.secondary}
+                    onPress={submit}
+                    // disabled={!selectedDate}
                 >
-                    <View style={{ padding: WP(4) }}>
-                        <Text style={{ color: colors.text, fontSize: HP(3) }}>
-                            Scroll down
-                        </Text>
-                    </View>
+                    <Text
+                        style={{
+                            color: colors.white,
+                            fontSize: HP(2),
+                            fontFamily: OutfitBold,
+                        }}
+                    >
+                        Next
+                    </Text>
+                </SingleButton>
+            </View>
 
-                    <ScrollDown
-                        move={moveScroll as any}
-                        fade={fadeScroll as any}
-                    />
-                </Animated.View>
-            )}
-        </View>
+            <Picker
+                isVisible={isMonthPickerVisible}
+                items={monthNames}
+                setIsVisible={setMonthPickerVisible}
+                selectedValue={selectedMonth}
+                setSelectedValue={setSelectedMonth}
+            />
+            <Picker
+                isVisible={isYearPickerVisible}
+                items={generateYears(currentYear - 71, currentYear).reverse()}
+                setIsVisible={setYearPickerVisible}
+                selectedValue={selectedYear}
+                setSelectedValue={setSelectedYear}
+            />
+        </Animated.View>
+    ) : (
+        <Animated.View
+            style={{
+                flex: 1,
+                padding: WP(4),
+                gap: HP(4),
+                height: HP(100),
+                opacity: fadeIn,
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <View style={{ padding: WP(4) }}>
+                <Text style={{ color: colors.text, fontSize: HP(3) }}>
+                    Scroll down
+                </Text>
+            </View>
+
+            <ScrollDown move={moveScroll as any} fade={fadeScroll as any} />
+        </Animated.View>
     );
 };
 
