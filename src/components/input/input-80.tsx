@@ -3,6 +3,7 @@ import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import Styles from "@/src/styles/styles";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
 import { useState } from "react";
 import { KeyboardType, TextInput, View } from "react-native";
 
@@ -31,9 +32,9 @@ const Input90percent: React.FC<Props> = ({
                     hex: colors.secondary,
                     alpha: 0.2,
                 }),
-                borderRadius: WP(4),
+                borderRadius: WP(2),
                 height: HP(6),
-                paddingHorizontal: WP(4),
+                paddingHorizontal: WP(2),
                 flexDirection: "row",
                 alignItems: "center",
             }}

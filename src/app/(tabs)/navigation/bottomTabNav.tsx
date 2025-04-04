@@ -8,8 +8,7 @@ import {
     HomeScreenProps,
     HomeStackParamList,
 } from "./type";
-import HomeHeader from "@/src/components/header/homeHeader";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,
     Pressable,
@@ -28,71 +27,77 @@ import Feather from "@expo/vector-icons/Feather";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { iconRef } from "@/src/constants/ref";
+import ExerciseNavigator from "./exerciseStackNav";
+import GridBackground from "@/src/components/other/grid-background";
 
 const BottomTab = createBottomTabNavigator<HomeStackParamList>(); // Use the type here
 
-interface Props {}
+interface Props {
+    setRouteName: (v: string) => void;
+    setShowHeader: (v: boolean) => void;
+}
 
-const HomeStack: React.FC<Props> = () => {
+const HomeStack: React.FC<Props> = ({ setRouteName, setShowHeader }) => {
     const colors = useThemeColors();
+    const ref = "@/src/assets/images/ui/icons-svg/";
 
-    const navigation = useNavigation(); // Type the navigation prop
-
-    // <HomeScreenProps<"Home">["navigation"]>
-
-    const ref = "@/src/assets/images/ui/icons/";
+    const [tabBarVisible, setTabBarVisible] = useState(true);
 
     const screens = [
         {
             name: "Progress",
-            component: MainDashboard,
+            component: <MainDashboard setRouteName={setRouteName} />,
             icon: require(`${ref}progress-icon.svg`),
         },
         {
             name: "Home",
-            component: MainHome,
+            component: (
+                <MainHome
+                    setTabBarVisible={setTabBarVisible}
+                    setRouteName={setRouteName}
+                    setShowHeader={setShowHeader}
+                />
+            ),
             icon: require(`${ref}dashboard-icon.svg`),
         },
         {
             name: "Exercise",
-            component: MainExercise,
+            component: (
+                <ExerciseNavigator
+                    setShowHeader={setShowHeader}
+                    setRouteName={setRouteName}
+                    setTabBarVisible={setTabBarVisible}
+                />
+            ),
             icon: require(`${ref}exercise-icon.svg`),
         },
-    ] as const;
+    ];
 
     // Add Animated.Value for rotation
     return (
         <View style={{ backgroundColor: colors.background, flex: 1 }}>
             <BottomTab.Navigator
-                screenOptions={({ route }) => ({
-                    headerShown: true,
-                    header: () => (
-                        <HomeHeader
-                            title={route.name}
-                            navigation={navigation}
-                        />
-                    ),
+                screenOptions={{
+                    headerShown: false,
                     tabBarShowLabel: false,
-
                     tabBarStyle: {
                         backgroundColor: colors.background,
                         width: WP(100),
                         alignSelf: "center",
+                        display: tabBarVisible ? "flex" : "none",
                     },
-
                     tabBarItemStyle: {
                         paddingTop: HP(0.5),
                         justifyContent: "center",
                         alignItems: "center",
                     },
-                })}
+                }}
                 initialRouteName="Home"
             >
                 {screens.map((v, i) => (
                     <BottomTab.Screen
                         key={i}
                         name={v.name as any}
-                        component={v.component}
                         options={{
                             tabBarIcon: ({ focused }) => (
                                 <Image
@@ -107,7 +112,14 @@ const HomeStack: React.FC<Props> = () => {
                                 />
                             ),
                         }}
-                    />
+                    >
+                        {() => (
+                            <>
+                                {v.component}
+                                <GridBackground zIndex={-1} />
+                            </>
+                        )}
+                    </BottomTab.Screen>
                 ))}
             </BottomTab.Navigator>
         </View>

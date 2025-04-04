@@ -2,7 +2,7 @@ import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Image } from "expo-image";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const PromptInput: React.FC = () => {
@@ -38,7 +38,7 @@ const PromptInput: React.FC = () => {
             />
             <TouchableOpacity disabled={input === ""}>
                 <Image
-                    source={require("@/src/assets/images/ui/icons/send-icon.svg")}
+                    source={require("@/src/assets/images/ui/icons-svg/send-icon.svg")}
                     style={{
                         height: HP(5),
                         aspectRatio: 1,

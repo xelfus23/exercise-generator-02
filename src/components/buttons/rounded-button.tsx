@@ -1,14 +1,19 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { Text, TouchableOpacity, View } from "react-native";
-import Styles from "@/src/styles/styles";
 import { OutfitBold } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
+import React from "react";
 
 interface RoundedButtonProps {
     text: string;
     press: any;
+    disabled?: boolean;
 }
-const RoundedButton: React.FC<RoundedButtonProps> = ({ text, press }) => {
+const RoundedButton: React.FC<RoundedButtonProps> = ({
+    text,
+    press,
+    disabled,
+}) => {
     const colors = useThemeColors();
 
     return (
@@ -21,6 +26,7 @@ const RoundedButton: React.FC<RoundedButtonProps> = ({ text, press }) => {
                 justifyContent: "center",
                 alignItems: "center",
             }}
+            disabled={disabled}
             onPress={press}
         >
             <Text

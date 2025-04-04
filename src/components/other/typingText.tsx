@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Animated, View, Text } from "react-native";
 
 interface ScreenProps {
-    text: string,
-    speed: number,
+    text: string;
+    speed: number;
 }
 
-export const TypingAnimation:React.FC<ScreenProps> = ({ text, speed = 100 }) => {
+export const TypingAnimation: React.FC<ScreenProps> = ({
+    text,
+    speed = 100,
+}) => {
     const sentenceRef = useRef(new Animated.Value(0)).current; // Animated value for progress
     const [currentText, setCurrentText] = useState("");
 
@@ -16,7 +19,7 @@ export const TypingAnimation:React.FC<ScreenProps> = ({ text, speed = 100 }) => 
         const animateTyping = async () => {
             for (let i = 0; i < chars.length; i++) {
                 await new Promise((resolve) => setTimeout(resolve, speed)); // Delay between characters
-                setCurrentText(prevText => prevText + chars[i]); // Correct way to append
+                setCurrentText((prevText) => prevText + chars[i]); // Correct way to append
             }
         };
 
@@ -33,4 +36,4 @@ export const TypingAnimation:React.FC<ScreenProps> = ({ text, speed = 100 }) => 
             {currentText}
         </Animated.Text>
     );
-}
+};

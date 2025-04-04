@@ -1,4 +1,5 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
+import { OutfitRegular } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -8,6 +9,7 @@ interface props {
     items: any;
     selectedMonth: any;
     selectedDate: any;
+    selectedYear: any;
 }
 
 const DatePicker: React.FC<props> = ({
@@ -15,6 +17,7 @@ const DatePicker: React.FC<props> = ({
     items,
     selectedDate,
     selectedMonth,
+    selectedYear,
 }) => {
     const colors = useThemeColors();
 
@@ -23,6 +26,10 @@ const DatePicker: React.FC<props> = ({
             style={{
                 flexDirection: "row",
                 flexWrap: "wrap",
+                borderWidth: !selectedYear ? 0 : !selectedMonth ? 0 : 0.5,
+                borderColor: colors.secondary,
+                borderRadius: WP(4),
+                maxHeight: HP(30),
             }}
         >
             {items.map((day: any, index: any) => (
@@ -63,7 +70,7 @@ const DatePicker: React.FC<props> = ({
                                       hex: colors.text,
                                       alpha: 0.2,
                                   }),
-                            fontFamily: "Outfit-Regular",
+                            fontFamily: OutfitRegular,
                         }}
                     >
                         {day || ""}

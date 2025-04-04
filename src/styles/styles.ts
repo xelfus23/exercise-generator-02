@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { HP, WP } from "../hooks/useDeviceDimension";
 import { useThemeColors } from "../hooks/useThemeColor";
-import { OutfitBold, OutfitRegular } from "../hooks/useFonts";
+import { md, OutfitBold, OutfitRegular, sm } from "../hooks/useFonts";
 import HexToHexa from "../hooks/useHexa";
 
 const Styles = () => {
@@ -12,7 +12,7 @@ const Styles = () => {
 
         input85percent: {
             flex: 1,
-            fontSize: HP(2),
+            fontSize: md,
             paddingHorizontal: WP(4),
             color: colors.text,
         },
@@ -23,7 +23,7 @@ const Styles = () => {
         },
 
         linkText: {
-            fontSize: HP(1.8),
+            fontSize: sm,
             fontFamily: OutfitRegular,
             color: colors.secondary,
             height: HP(6),

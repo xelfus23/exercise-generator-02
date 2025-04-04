@@ -6,7 +6,7 @@ import { Image } from "expo-image";
 import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import SingleButton from "@/src/components/buttons/single-button";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Fade } from "@/src/module/animations/fadeAnimation";
 import ScrollDown from "@/src/components/other/scrollDown";
 
@@ -26,6 +26,7 @@ const Gender: React.FC<props> = ({
     const colors = useThemeColors();
     const { user } = useAuth();
     const [submitted, setSubmitted] = useState(false);
+    const [selectedGender, setSelectedGender] = useState("");
 
     const fadeOut = useRef<Animated.Value>(new Animated.Value(1)).current;
     const fadeIn = useRef<Animated.Value>(new Animated.Value(0)).current;
@@ -43,6 +44,8 @@ const Gender: React.FC<props> = ({
     });
 
     const submit = () => {
+        // setUserProfile({ gender: selectedGender });
+
         Fade({
             fromValue: fadeOut,
             duration: 1000,
@@ -74,7 +77,7 @@ const Gender: React.FC<props> = ({
     ];
 
     const handlePress = (v: any) => {
-        setUserProfile({ gender: v.value });
+        setSelectedGender(v.value);
     };
 
     return !submitted ? (
@@ -100,9 +103,8 @@ const Gender: React.FC<props> = ({
             <View
                 style={{
                     flexDirection: "row",
-                    padding: WP(4),
                     gap: WP(8),
-                    justifyContent: "space-around",
+                    marginTop: HP(2),
                 }}
             >
                 {genderItems.map((v, i) => (
@@ -116,7 +118,7 @@ const Gender: React.FC<props> = ({
                             style={{
                                 height: HP(25),
                                 width: WP(30),
-                                opacity: gender === v.value ? 1 : 0.5,
+                                opacity: selectedGender === v.value ? 1 : 0.5,
                             }}
                             contentFit="contain"
                         />
@@ -143,9 +145,13 @@ const Gender: React.FC<props> = ({
                 <SingleButton
                     loading={false}
                     style={{}}
-                    color={gender === "" ? colors.secondary : colors.primary}
+                    color={
+                        selectedGender === ""
+                            ? colors.secondary
+                            : colors.primary
+                    }
                     onPress={submit}
-                    disabled={gender === ""}
+                    // disabled={gender === ""}
                 >
                     <Text
                         style={{
@@ -162,9 +168,9 @@ const Gender: React.FC<props> = ({
     ) : (
         <Animated.View
             style={{
+                flex: 1,
                 padding: WP(4),
                 gap: HP(4),
-                height: HP(100),
                 opacity: fadeIn,
                 justifyContent: "center",
                 alignItems: "center",

@@ -37,25 +37,14 @@ const Height: React.FC<props> = ({
     setIndex,
     height,
 }) => {
-    const heightOptions = Array.from({ length: 121 }, (_, i) => ({
-        value: i + 80,
-    }));
-
+    const heightOptions = Array.from({ length: 231 }, (_, i) => 20 + i); // 20kg to 250kg
     const colors = useThemeColors();
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
-
     const fadeOut = useRef<Animated.Value>(new Animated.Value(1)).current;
     const fadeIn = useRef<Animated.Value>(new Animated.Value(0)).current;
-    const fadeIn2 = useRef<Animated.Value>(new Animated.Value(0)).current;
-
-    const [selectedHeight, setSelectedHeight] = useState<number>();
-
-    useEffect(() => {
-        console.log(selectedHeight);
-    }, [selectedHeight]);
-
-    const itemWidth = Math.round(WP(3));
+    const itemWidth = WP(3);
+    const [selectedHeight, setSelectedHeight] = useState("20.0");
 
     const moveScroll = YOffset.interpolate({
         inputRange: [HP(200), HP(300)],
@@ -70,44 +59,25 @@ const Height: React.FC<props> = ({
     });
 
     const submit = async () => {
-        setUserProfile({ height: selectedHeight });
+        // setUserProfile({ height: currentHeight });
         Fade({
             fromValue: fadeOut,
             duration: 1000,
             after: () => {
                 setSubmitted(true);
-                setLoading(true);
-                setTimeout(() => {
-                    setIndex(3);
-                    Fade({
-                        fromValue: fadeIn,
-                        duration: 1000,
-                        after: () => {
-                            setLoading(false);
-                            Fade({
-                                fromValue: fadeIn2,
-                                duration: 1000,
-                                after: () => {
-                                    console.log(height);
-                                },
-                                toValue: 1,
-                            });
-                        },
-                        toValue: 1,
-                    });
-                }, 1000);
+                setIndex(3);
+                Fade({
+                    fromValue: fadeIn,
+                    duration: 1000,
+                    after: () => {
+                        setLoading(false);
+                        console.log(height);
+                    },
+                    toValue: 1,
+                });
             },
             toValue: 0,
         });
-    };
-
-    const heightScroll = (event: any) => {
-        const offset = event.nativeEvent.contentOffset.x;
-        let heightIndex = Math.max(
-            0,
-            Math.min(Math.round(offset / itemWidth), heightOptions.length - 1)
-        );
-        setSelectedHeight(heightOptions[heightIndex].value); // Update selectedHeight
     };
 
     return !submitted ? (
@@ -127,7 +97,7 @@ const Height: React.FC<props> = ({
                     paddingLeft: WP(4),
                 }}
             >
-                Select your height
+                Select your height {selectedHeight}
             </Text>
             <View
                 style={{
@@ -138,9 +108,9 @@ const Height: React.FC<props> = ({
                 <Meter
                     itemWidth={itemWidth}
                     loading={loading}
-                    scroll={heightScroll}
                     options={heightOptions}
                     unit="cm"
+                    setSelectedValue={setSelectedHeight}
                 />
             </View>
             <View
@@ -176,7 +146,6 @@ const Height: React.FC<props> = ({
                 flex: 1,
                 padding: WP(4),
                 gap: HP(4),
-                height: HP(100),
                 opacity: fadeIn,
                 justifyContent: "center",
                 alignItems: "center",

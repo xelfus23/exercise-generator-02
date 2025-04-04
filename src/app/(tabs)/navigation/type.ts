@@ -1,6 +1,17 @@
 import { RouteProp } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
+export type ExerciseScreenParams = {
+    item: any; // Replace 'any' with the actual type of your item
+    sets: number;
+    value: number;
+};
+
+export type ExerciseStackParamList = {
+    mainExercise: undefined; // Or the correct params if it takes any
+    exerciseScreen: ExerciseScreenParams; // Use your existing type
+};
+
 export type MainDashboardParams = {
     // Add parameters that MainDashboard might receive, e.g.,
     // userId?: string;
@@ -10,7 +21,7 @@ export type MainHomeParams = {
 };
 
 export type MainExerciseParams = {
-    // Add parameters that MainExercise might receive, e.g.,
+    exerciseScreen: ExerciseScreenParams;
 };
 
 export type AuthStackParamList = {
@@ -29,7 +40,7 @@ export type HomeStackParamList = {
 
 export type ChatStackParamList = {
     ChatHeads: undefined;
-    ChatScreen: undefined;
+    ChatScreen: { user: any };
 };
 
 export type DrawerStackParamList = {

@@ -1,10 +1,10 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import { md, OutfitBold, OutfitRegular, xl, xxl } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRef, useState } from "react";
+import React from "react";
 import {
     View,
     Text,
@@ -26,29 +26,29 @@ const HomeHeader: React.FC<HeaderProps> = ({ title, navigation }) => {
             colors={[colors.background, colors.card]}
             style={{
                 width: WP(100),
-                height: HP(8),
+                height: HP(10),
                 backgroundColor: colors.card,
-                alignItems: "center",
+                alignItems: "flex-end",
                 flexDirection: "row",
                 paddingHorizontal: WP(4),
                 borderBottomRightRadius: WP(4),
                 borderBottomLeftRadius: WP(4),
                 elevation: 8,
                 justifyContent: "space-between",
+                paddingBottom: HP(1),
             }}
         >
             <Text
                 style={{
                     color: colors.text,
-                    fontSize: HP(3),
-                    fontFamily: OutfitRegular,
+                    fontSize: xl,
+                    fontFamily: OutfitBold,
                 }}
             >
                 {title}
             </Text>
-
             <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                onPress={navigation}
                 style={{
                     padding: WP(2),
                     borderRadius: WP(2),
@@ -56,7 +56,7 @@ const HomeHeader: React.FC<HeaderProps> = ({ title, navigation }) => {
             >
                 <Animated.View>
                     <Image
-                        source={require("@/src/assets/images/ui/icons/menu-icon.svg")} //consider change the extension of the image.
+                        source={require("@/src/assets/images/ui/icons-svg/menu-icon.svg")} //consider change the extension of the image.
                         style={{
                             height: HP(3),
                             aspectRatio: 1,

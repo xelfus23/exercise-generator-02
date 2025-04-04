@@ -2,16 +2,16 @@ import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { useAuth } from "@/src/services/auth/authentication";
-import { Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import GradientText from "../../other/gradientText";
+import React, { useState } from "react";
 
 const Banner: React.FC = () => {
     const colors = useThemeColors();
     const { user } = useAuth();
-    console.log(user);
 
     return (
-        <View style={{ padding: WP(8), width: WP(100) }}>
+        <View style={{ padding: WP(4), width: WP(100) }}>
             <View
                 style={{
                     flexDirection: "row",
@@ -29,7 +29,7 @@ const Banner: React.FC = () => {
                     Hello
                 </Text>
                 <GradientText
-                    colors={[colors.primary, colors.primary]}
+                    colors={[colors.primary, colors.secondary]}
                     text={`${user?.firstName} ${user?.lastName}`}
                     style={{
                         color: colors.primary,

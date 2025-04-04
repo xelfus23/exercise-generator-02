@@ -3,7 +3,7 @@ import { TypingAnimation } from "@/src/components/other/typingText";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 
 interface ScreenProps {
@@ -112,6 +112,7 @@ const WelcomeScreen2: React.FC<ScreenProps> = ({ navigator, screenIndex }) => {
                 <RoundedButton
                     text="Continue"
                     press={() => navigator.navigate("SignUp")}
+                    disabled={!enable}
                 />
             </Animated.View>
         </View>

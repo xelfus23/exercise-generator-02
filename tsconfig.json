@@ -1,17 +1,20 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "src/constants/dummy.ts"  ]
+    "extends": "expo/tsconfig.base",
+    "compilerOptions": {
+        "jsx": "react",
+        "strict": true,
+        "paths": {
+            "@/*": ["./*"]
+        },
+        "esModuleInterop": true
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        ".expo/types/**/*.ts",
+        "expo-env.d.ts",
+        "src/assets/data/dummy.ts",
+        "src/services/api/test.js",
+        "nativewind-env.d.ts"
+    ]
 }

@@ -1,5 +1,6 @@
 import LottieView from "lottie-react-native";
 import { View } from "react-native";
+import React from "react";
 
 interface props {
     style: any;

@@ -1,9 +1,9 @@
-import { ScrollView, Text, useColorScheme, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { WP, HP } from "@/src/hooks/useDeviceDimension";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import WelcomeScreen1 from "./welcomeScreen1";
 import WelcomeScreen2 from "./welcomeScreen2";
 import { useNavigation } from "expo-router";

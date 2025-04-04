@@ -1,10 +1,10 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import { lg, OutfitBold, OutfitRegular, xl } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRef, useState } from "react";
+import React from "react";
 import {
     View,
     Text,
@@ -13,58 +13,79 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { DrawerActions } from "@react-navigation/native"; // Import DrawerActions
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 interface HeaderProps {
     title: string;
     navigation: any;
+    onChat?: boolean;
+    image?: any;
 }
-const ChatHeader: React.FC<HeaderProps> = ({ title, navigation }) => {
+const ChatHeader: React.FC<HeaderProps> = ({
+    title,
+    navigation,
+    onChat,
+    image,
+}) => {
     const colors = useThemeColors();
+    const router = useRouter();
 
     return (
         <LinearGradient
             colors={[colors.background, colors.card]}
             style={{
                 width: WP(100),
-                height: HP(8),
+                height: HP(10),
                 backgroundColor: colors.card,
-                alignItems: "center",
                 flexDirection: "row",
                 paddingHorizontal: WP(4),
                 borderBottomRightRadius: WP(4),
                 borderBottomLeftRadius: WP(4),
                 elevation: 8,
-                justifyContent: "space-between",
+                gap: WP(4),
+                alignItems: "flex-end",
+                paddingBottom: HP(2),
+                zIndex: 100,
             }}
         >
-            <Text
+            <View
                 style={{
-                    color: colors.text,
-                    fontSize: HP(3),
-                    fontFamily: OutfitRegular,
+                    alignItems: "center",
+                    flexDirection: "row",
+                    gap: WP(4),
                 }}
             >
-                {title}
-            </Text>
-
-            <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                style={{
-                    padding: WP(2),
-                    borderRadius: WP(2),
-                }}
-            >
-                <Animated.View>
+                <TouchableOpacity onPress={navigation}>
+                    <Ionicons
+                        name="arrow-back-outline"
+                        size={xl}
+                        color={colors.text}
+                    />
+                </TouchableOpacity>
+                {image && (
                     <Image
-                        source={require("@/src/assets/images/ui/icons/menu-icon.svg")} //consider change the extension of the image.
+                        source={image}
                         style={{
-                            height: HP(3),
+                            height: HP(4),
                             aspectRatio: 1,
-                            tintColor: colors.secondary,
+                            borderRadius: WP(100),
                         }}
                     />
-                </Animated.View>
-            </TouchableOpacity>
+                )}
+                <Text
+                    style={{
+                        color: colors.text,
+                        fontSize: xl,
+                        fontFamily: OutfitRegular,
+                        maxWidth: WP(80),
+                    }}
+                    adjustsFontSizeToFit
+                    numberOfLines={1}
+                >
+                    {title}
+                </Text>
+            </View>
         </LinearGradient>
     );
 };

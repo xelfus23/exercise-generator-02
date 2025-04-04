@@ -35,18 +35,15 @@ const Weight: React.FC<props> = ({
     setIndex,
     weight,
 }) => {
-    const weightOptions = Array.from({ length: 2301 }, (_, i) => ({
-        value: Number((i * 0.1 + 20).toFixed(1)),
-    }));
-
+    const weightOptions = Array.from({ length: 121 }, (_, i) => 20 + i);
     const colors = useThemeColors();
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const fadeOut = useRef<Animated.Value>(new Animated.Value(1)).current;
     const fadeIn = useRef<Animated.Value>(new Animated.Value(0)).current;
-    const [selectedWeight, setSelectedWeight] = useState<number>();
+    const [currentWeight, setCurrentWeight] = useState<string>("0");
 
-    const itemWidth = Math.round(WP(3));
+    const itemWidth = WP(3);
 
     const moveScroll = YOffset.interpolate({
         inputRange: [HP(300), HP(400)],
@@ -60,17 +57,8 @@ const Weight: React.FC<props> = ({
         extrapolate: "clamp",
     });
 
-    const weightScroll = (event: any) => {
-        const offset = event.nativeEvent.contentOffset.x;
-        let weightIndex = Math.max(
-            0,
-            Math.min(Math.round(offset / itemWidth), weightOptions.length - 1)
-        );
-        setSelectedWeight(weightOptions[weightIndex].value); // Update selectedHeight
-    };
-
     const submit = async () => {
-        setUserProfile({ weight: selectedWeight });
+        // setUserProfile({ weight: currentWeight });
         Fade({
             fromValue: fadeOut,
             duration: 1000,
@@ -109,12 +97,12 @@ const Weight: React.FC<props> = ({
                     paddingLeft: WP(4),
                 }}
             >
-                Select your weight
+                Select your weight {currentWeight}
             </Text>
             <Meter
                 itemWidth={itemWidth}
                 loading={loading}
-                scroll={weightScroll}
+                setSelectedValue={setCurrentWeight}
                 options={weightOptions}
                 unit="kg"
             />
@@ -151,7 +139,6 @@ const Weight: React.FC<props> = ({
                 flex: 1,
                 padding: WP(4),
                 gap: HP(4),
-                height: HP(100),
                 opacity: fadeIn,
                 justifyContent: "center",
                 alignItems: "center",

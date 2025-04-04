@@ -1,4 +1,5 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
+import { md } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -19,7 +20,7 @@ const LinkText: React.FC<Params> = ({ text1, text2, navigate }) => {
             <Text
                 style={{
                     color: HexToHexa({ hex: colors.text, alpha: 0.5 }),
-                    fontSize: HP(1.8),
+                    fontSize: md,
                 }}
             >
                 {text1}
@@ -28,7 +29,7 @@ const LinkText: React.FC<Params> = ({ text1, text2, navigate }) => {
                 <Text
                     style={{
                         color: colors.primary,
-                        fontSize: HP(1.8),
+                        fontSize: md,
                     }}
                 >
                     {text2}

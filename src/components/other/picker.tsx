@@ -4,6 +4,7 @@ import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { ScrollView, Text, TouchableOpacity } from "react-native";
 import { Modal, View } from "react-native";
 import SingleButton from "../buttons/single-button";
+import { OutfitRegular } from "@/src/hooks/useFonts";
 
 interface props {
     isVisible: boolean;
@@ -93,7 +94,7 @@ const Picker: React.FC<props> = ({
                                 <Text
                                     style={{
                                         fontSize: HP(2),
-                                        fontFamily: "Outfit-Regular",
+                                        fontFamily: OutfitRegular,
                                         color:
                                             selectedValue !== val
                                                 ? colors.text

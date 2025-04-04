@@ -1,12 +1,8 @@
 import RoundedButton from "@/src/components/buttons/rounded-button";
-import { TypingAnimation } from "@/src/components/other/typingText";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitRegular } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
-import Styles from "@/src/styles/styles";
-import { useNavigation } from "expo-router";
-import { useRef, useState } from "react";
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface ScreenProps {
     handleScroll: (value: number) => void;

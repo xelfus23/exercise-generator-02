@@ -4,24 +4,24 @@ import PasswordInput85percent from "@/src/components/input/passwordInput-80";
 import GradientText from "@/src/components/other/gradientText";
 import ScrollableInput from "@/src/components/other/scrollableInput";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitBold } from "@/src/hooks/useFonts";
+import { md, OutfitBold, xxxl } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { AuthStackParamList, HomeStackParamList } from "../../../navigation/type";
+import {
+    AuthStackParamList,
+    HomeStackParamList,
+} from "../../../navigation/type";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"; // Import
 import { useNavigation } from "expo-router";
 import LinkText from "@/src/components/buttons/linkText";
 import { useAuth } from "@/src/services/auth/authentication";
-
 type LoginProps = NativeStackNavigationProp<AuthStackParamList, "Login">;
-type HomeProps = NativeStackNavigationProp<HomeStackParamList, "Home">;
 
 const Login: React.FC = () => {
     const navigation = useNavigation<LoginProps>();
-    const navigateHome = useNavigation<HomeProps>();
     const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
                 >
                     <GradientText
                         style={{
-                            fontSize: HP(5),
+                            fontSize: xxxl,
                             fontFamily: OutfitBold,
                             marginTop: HP(25),
                             zIndex: 2,
@@ -126,12 +126,17 @@ const Login: React.FC = () => {
                             />
                         )
                     )}
-                    <SingleButton onPress={handleLogin} color={colors.primary}>
+                    <SingleButton
+                        loading={false}
+                        style={{}}
+                        onPress={handleLogin}
+                        color={colors.primary}
+                    >
                         <Text
                             style={{
                                 color: colors.white,
                                 fontFamily: OutfitBold,
-                                fontSize: HP(2),
+                                fontSize: md,
                             }}
                         >
                             Login

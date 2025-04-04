@@ -1,24 +1,29 @@
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
-import { useRef, useState } from "react";
-import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import React, { useRef, useState } from "react";
+import { lg, OutfitBold, OutfitRegular, xl } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import SingleButton from "@/src/components/buttons/single-button";
 import { Fade } from "@/src/module/animations/fadeAnimation";
 import ScrollDown from "@/src/components/other/scrollDown";
+import Entypo from "@expo/vector-icons/Entypo";
 
 interface props {
     YOffset: Animated.Value;
     setIndex: (v: number) => void;
+    fitnessLevel: string;
 }
 
-const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
+const FitnesLevel: React.FC<props> = ({ YOffset, setIndex, fitnessLevel }) => {
     const colors = useThemeColors();
     const [submitted, setSubmitted] = useState(false);
     const fadeOut = useRef<Animated.Value>(new Animated.Value(1)).current;
     const fadeIn = useRef<Animated.Value>(new Animated.Value(0)).current;
-    const [selected, setSelected] = useState("");
+    const [selected, setSelected] = useState({
+        value: "",
+        description: "",
+    });
 
     const moveScroll = YOffset.interpolate({
         inputRange: [HP(500), HP(600)],
@@ -38,18 +43,21 @@ const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
             value: "beginner",
             description:
                 "You are new to exercise or returning after a long break. Focus on building foundational strength, endurance, and mobility with low-impact activities.",
+            color: colors.secondary,
         },
         {
             label: "Intermediate",
             value: "intermediate",
             description:
                 "You have a consistent fitness routine and are looking to improve your strength, endurance, and flexibility through moderate-intensity workouts.",
+            color: colors.success,
         },
         {
             label: "Advanced",
             value: "advanced",
             description:
                 "You are highly active and engage in challenging workouts regularly. Training involves high-intensity exercises and advanced techniques to optimize performance.",
+            color: colors.warning,
         },
     ];
 
@@ -81,12 +89,12 @@ const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
         >
             <Text
                 style={{
-                    fontSize: HP(3),
+                    fontSize: xl,
                     color: colors.text,
                     fontFamily: OutfitRegular,
                     maxWidth: WP(90),
                     paddingLeft: WP(4),
-                    marginTop: HP(20),
+                    marginTop: HP(30),
                 }}
             >
                 What is your current fitness level?
@@ -97,21 +105,16 @@ const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
             >
                 {fitnessLevels.map((f) => (
                     <TouchableOpacity
-                        onPress={() => setSelected(f.value)}
+                        onPress={() => setSelected(f as any)}
                         key={f.label}
                         style={{
-                            padding: WP(4),
-                            backgroundColor:
-                                selected === f.value
-                                    ? HexToHexa({
-                                          hex: colors.primary,
-                                          alpha: 1,
-                                      })
-                                    : HexToHexa({
-                                          hex: colors.secondary,
-                                          alpha: 0.2,
-                                      }),
+                            padding: WP(6),
+                            backgroundColor: HexToHexa({
+                                hex: f.color,
+                                alpha: 0.5,
+                            }),
                             borderRadius: WP(4),
+                            alignItems: "center",
                             gap: HP(1),
                         }}
                     >
@@ -119,26 +122,49 @@ const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
                             style={{
                                 fontSize: HP(2),
                                 color:
-                                    selected === f.value
-                                        ? colors.white
+                                    selected.value === f.value
+                                        ? colors.text
                                         : colors.text,
+                                fontFamily: OutfitRegular,
                             }}
                         >
                             {f.label}
                         </Text>
-                        <Text
+                        <Entypo
+                            name="check"
+                            size={HP(3)}
+                            color={
+                                selected.value === f.value
+                                    ? colors.primary
+                                    : "transparent"
+                            }
                             style={{
-                                fontSize: HP(1.5),
-                                color:
-                                    selected === f.value
-                                        ? colors.white
-                                        : colors.text,
+                                position: "absolute",
+                                right: WP(5),
+                                top: WP(5),
+                                borderWidth: 3,
+                                borderRadius: WP(100),
+                                borderColor:
+                                    selected.value === f.value
+                                        ? colors.primary
+                                        : "transparent",
                             }}
-                        >
-                            {f.description}
-                        </Text>
+                        />
                     </TouchableOpacity>
                 ))}
+
+                <Text
+                    style={{
+                        fontSize: HP(1.5),
+                        color: colors.text,
+                        fontFamily: OutfitRegular,
+                        paddingHorizontal: WP(4),
+                        textAlign: "center",
+                    }}
+                >
+                    {selected.description ||
+                        "Select your current fitness level."}
+                </Text>
             </View>
 
             <View
@@ -171,9 +197,9 @@ const FitnesLevel: React.FC<props> = ({ YOffset, setIndex }) => {
     ) : (
         <Animated.View
             style={{
+                flex: 1,
                 padding: WP(4),
                 gap: HP(4),
-                height: HP(100),
                 opacity: fadeIn,
                 justifyContent: "center",
                 alignItems: "center",

@@ -1,39 +1,76 @@
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitRegular } from "@/src/hooks/useFonts";
+import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, Text, View } from "react-native";
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    Dimensions,
+    TextStyle,
+} from "react-native";
+import React, { useRef, useState, useEffect } from "react";
 
 interface props {
-    scroll: any;
     options: any;
     itemWidth: number;
     loading: boolean;
     unit: string;
+    setSelectedValue: (v: string) => void;
 }
+
 const Meter: React.FC<props> = ({
-    scroll,
     options,
     itemWidth,
     loading,
     unit,
+    setSelectedValue,
 }) => {
     const colors = useThemeColors();
+    const scrollViewRef = useRef(null);
+
+    // Define constants
+    const BORDER_WIDTH = 1; // Border width of tick marks
+    const TICK_WIDTH = Math.ceil(WP(3)); // Round up
+    const ACTUAL_TICK_WIDTH = TICK_WIDTH - BORDER_WIDTH; // Adjust for border width
+    const TICKS_PER_SEGMENT = 10; // 10 ticks per segment
+    const SEGMENT_WIDTH = Math.ceil(TICK_WIDTH * TICKS_PER_SEGMENT); // Round up
+    const CARET_POSITION = Math.ceil(WP(30.5)); // Round up
+    const CARET_OFFSET = 6; // Offset adjustment for the carets
+    const SEGMENT_VALUE_WIDTH = Math.ceil(WP(15)); // Added to align the segment value
+
+    const lineStyle = {
+        fontFamily: OutfitRegular,
+        width: ACTUAL_TICK_WIDTH,
+        textAlignVertical: "top",
+        color: colors.text,
+        borderLeftWidth: BORDER_WIDTH,
+        borderColor: colors.text,
+        marginRight: 1,
+    };
+
+    const scroll = (event: any) => {
+        console.log("Scrolling");
+        const offsetX = event.nativeEvent.contentOffset.x;
+        const preciseValue = 20 + offsetX / itemWidth / 10;
+        setSelectedValue(preciseValue.toFixed(1) as any);
+    };
 
     return (
         <View
             style={{
-                width: Math.round(WP(100)),
+                width: WP(100),
                 alignItems: "flex-start",
             }}
         >
             <AntDesign
                 name="caretdown"
-                size={HP(1.5)}
+                size={WP(3)}
                 color={colors.text}
-                style={{ paddingLeft: Math.round(WP(30)) }}
+                style={{ paddingLeft: CARET_POSITION - CARET_OFFSET }}
             />
             <View style={{ height: HP(10), overflow: "hidden" }}>
                 <LinearGradient
@@ -52,71 +89,132 @@ const Meter: React.FC<props> = ({
                     }}
                 >
                     <ScrollView
+                        ref={scrollViewRef}
                         horizontal
-                        snapToInterval={itemWidth}
+                        snapToInterval={TICK_WIDTH} // Use the full tick width for snapping
                         style={{
-                            width: Math.round(WP(100)), // Use full width
+                            width: WP(100),
                         }}
                         contentContainerStyle={{
-                            paddingLeft: WP(30),
-                            paddingRight: WP(70) - itemWidth,
+                            paddingLeft: CARET_POSITION, // Adjust for border
+                            paddingRight: WP(100) - SEGMENT_VALUE_WIDTH, // Padding right is calculated to show only one value, so the snapping will not misalign
                         }}
-                        onMomentumScrollEnd={scroll}
                         showsHorizontalScrollIndicator={false}
                         disableScrollViewPanResponder={loading}
-                        decelerationRate={0.989} // Add decelerationRate
+                        onResponderMove={() => console.log("Moving")}
+                        decelerationRate="fast"
+                        snapToAlignment="start"
+                        overScrollMode="never"
+                        onScroll={scroll}
                     >
-                        {options.map((value: any, index: number) => (
+                        {options.map((value: number, idx: number) => (
                             <View
+                                key={idx}
                                 style={{
-                                    alignItems: "center",
-                                    width: itemWidth,
+                                    width: SEGMENT_WIDTH,
                                 }}
-                                key={index}
                             >
                                 <View
                                     style={{
+                                        opacity: 0.8,
                                         flexDirection: "row",
-                                        justifyContent: "space-between",
+                                        width: SEGMENT_WIDTH,
+                                        height: "50%",
+                                        // Ensure the ticks align properly
+                                        justifyContent: "flex-start",
                                     }}
                                 >
                                     <Text
-                                        style={{
-                                            fontSize:
-                                                index % 10 === 0
-                                                    ? HP(3)
-                                                    : index % 5 === 0
-                                                    ? HP(2.5)
-                                                    : HP(1.8),
-                                            color: colors.text, // Highlight selected
-                                            top:
-                                                index % 10 === 0
-                                                    ? -HP(0.4)
-                                                    : index % 5 === 0
-                                                    ? -HP(0.3)
-                                                    : -HP(0.1),
-                                            opacity: 0.8,
-                                            fontFamily: OutfitRegular,
-                                        }}
-                                    >
-                                        |
-                                    </Text>
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "50%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "30%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
+                                    <Text
+                                        style={[
+                                            lineStyle as TextStyle,
+                                            {
+                                                height: "20%",
+                                            },
+                                        ]}
+                                    />
                                 </View>
                                 <Text
                                     style={{
-                                        color: colors.text, // Highlight selected
+                                        color: colors.text,
+                                        fontSize: WP(3),
                                         width: WP(15),
-                                        fontSize:
-                                            index % 10 === 0
-                                                ? HP(1.5)
-                                                : HP(1.5),
-                                        fontFamily: OutfitRegular,
-                                        textAlign: "center",
+                                        paddingLeft: BORDER_WIDTH, // Align text with the first tick
                                     }}
                                 >
-                                    {index % 10 === 0
-                                        ? Math.floor(value.value) + unit
-                                        : ""}
+                                    {value}
+                                    {unit}
                                 </Text>
                             </View>
                         ))}
@@ -125,9 +223,9 @@ const Meter: React.FC<props> = ({
             </View>
             <AntDesign
                 name="caretup"
-                size={HP(1.5)}
+                size={WP(3)}
                 color={colors.text}
-                style={{ paddingLeft: Math.round(WP(30)) }}
+                style={{ paddingLeft: CARET_POSITION - CARET_OFFSET }}
             />
         </View>
     );

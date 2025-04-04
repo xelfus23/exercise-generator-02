@@ -5,7 +5,7 @@ import PasswordInput85percent from "@/src/components/input/passwordInput-80";
 import GradientText from "@/src/components/other/gradientText";
 import ScrollableInput from "@/src/components/other/scrollableInput";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { OutfitBold } from "@/src/hooks/useFonts";
+import { md, OutfitBold, xl, xxl, xxxl } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import Styles from "@/src/styles/styles";
 import { NavigationProp } from "@react-navigation/native";
@@ -13,7 +13,7 @@ import { Image } from "expo-image";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"; // Import
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     View,
     Text,
@@ -24,11 +24,13 @@ import {
 import { AuthStackParamList } from "../../../navigation/type";
 import LinkText from "@/src/components/buttons/linkText";
 import GridBackground from "@/src/components/other/grid-background";
+import { useAuth } from "@/src/services/auth/authentication";
 
 type SignUpProps = NativeStackNavigationProp<AuthStackParamList, "SignUp">;
 
 const SignUp: React.FC = () => {
     const colors = useThemeColors();
+    const { signup } = useAuth();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
@@ -37,8 +39,15 @@ const SignUp: React.FC = () => {
     const [isHidden, setIsHidden] = useState(true);
     const navigation = useNavigation<SignUpProps>(); // Correctly typed
 
-    const handleSignUp = () => {
-        navigation.navigate("Details");
+    const handleSignUp = async () => {
+        try {
+            const result = await signup(email, password, firstName, lastName);
+            if (result.success) {
+                navigation.navigate("Details");
+            }
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const items = [
@@ -82,8 +91,6 @@ const SignUp: React.FC = () => {
         },
     ];
 
-    console.log("Sign up");
-
     return (
         <View style={{ flex: 1 }}>
             <GridBackground zIndex={0} />
@@ -98,7 +105,7 @@ const SignUp: React.FC = () => {
                 >
                     <GradientText
                         style={{
-                            fontSize: HP(5),
+                            fontSize: xxxl,
                             fontFamily: OutfitBold,
                             marginTop: HP(25),
                             zIndex: 2,
@@ -131,12 +138,17 @@ const SignUp: React.FC = () => {
                         )
                     )}
 
-                    <SingleButton onPress={handleSignUp} color={colors.primary}>
+                    <SingleButton
+                        style={{}}
+                        loading={false}
+                        onPress={handleSignUp}
+                        color={colors.primary}
+                    >
                         <Text
                             style={{
                                 color: colors.white,
                                 fontFamily: OutfitBold,
-                                fontSize: HP(2),
+                                fontSize: md,
                             }}
                         >
                             Sign Up

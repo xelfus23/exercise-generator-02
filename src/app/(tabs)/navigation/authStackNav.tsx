@@ -5,6 +5,7 @@ import Login from "../screens/OnBoarding/auth/login";
 import SignUp from "../screens/OnBoarding/auth/signup";
 import GetDetails from "../screens/OnBoarding/auth/getPersonalDetails/getDetails";
 import { AuthStackParamList } from "./type";
+import React from "react";
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 const AuthStack: React.FC = () => {

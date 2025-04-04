@@ -6,7 +6,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Feather } from "@expo/vector-icons";
 
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
     value: string;
@@ -38,9 +38,9 @@ const PasswordInput90percent: React.FC<Props> = ({
                     hex: colors.secondary,
                     alpha: 0.2,
                 }),
-                borderRadius: WP(4),
+                borderRadius: WP(2),
                 height: HP(6),
-                paddingHorizontal: WP(4),
+                paddingHorizontal: WP(2),
                 flexDirection: "row",
                 alignItems: "center",
             }}

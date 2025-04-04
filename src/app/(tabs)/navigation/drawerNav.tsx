@@ -2,48 +2,82 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeStack from "./bottomTabNav";
 import { DrawerStackParamList } from "./type";
 import Settings from "../screens/Drawer/settings/settings";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+    Animated,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import HexToHexa from "@/src/hooks/useHexa";
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import { useAuth } from "@/src/services/auth/authentication";
-import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import { lg, md, OutfitBold, OutfitRegular, xl } from "@/src/hooks/useFonts";
 import ChatStack from "./chatStackNav";
 import Notification from "../screens/Drawer/notification/notification";
+import { LinearGradient } from "expo-linear-gradient";
+import { DrawerActions } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import HomeHeader from "@/src/components/header/homeHeader";
+import GridBackground from "@/src/components/other/grid-background";
 
 const MainStack: React.FC = () => {
     const Drawer = createDrawerNavigator<DrawerStackParamList>();
     const { user, logout } = useAuth();
+    const [routeName, setRouteName] = useState("Home");
+    const [showHeader, setShowHeader] = useState(true);
 
     const colors = useThemeColors();
+    const navigation = useNavigation();
 
     const photoRef = "@/src/assets/images/ui/photos/";
-    const iconRef = "@/src/assets/images/ui/icons/";
+    const iconRef = "@/src/assets/images/ui/icons-svg/";
 
     const featureScreens = [
         {
             name: "HomeDrawer",
-            component: HomeStack,
+            component: (
+                <HomeStack
+                    setRouteName={setRouteName}
+                    setShowHeader={setShowHeader}
+                />
+            ),
             label: "Home",
             icon: require(`${iconRef}home-icon.svg`),
         },
         {
             name: "ChatDrawer",
-            component: ChatStack,
+            component: (
+                <ChatStack
+                    setRouteName={setRouteName}
+                    setShowHeader={setShowHeader}
+                />
+            ),
             label: "Chats",
             icon: require(`${iconRef}chat-icon.svg`),
         },
         {
             name: "NotificationDrawer",
-            component: Notification,
+            component: (
+                <Notification
+                    setRouteName={setRouteName}
+                    setShowHeader={setShowHeader}
+                />
+            ),
             label: "Notifications",
             icon: require(`${iconRef}notification-icon.svg`),
         },
         {
             name: "SettingsDrawer",
-            component: Settings,
+            component: (
+                <Settings
+                    setRouteName={setRouteName}
+                    setShowHeader={setShowHeader}
+                />
+            ),
             label: "Settings",
             icon: require(`${iconRef}settings-icon.svg`),
         },
@@ -66,7 +100,7 @@ const MainStack: React.FC = () => {
                     alignItems: "center",
                     backgroundColor: isFocused ? colors.primary : "transparent",
                     height: HP(6),
-                    borderRadius: WP(4),
+                    borderRadius: WP(3),
                 }}
             >
                 {options.drawerIcon && (
@@ -79,21 +113,10 @@ const MainStack: React.FC = () => {
                     </View>
                 )}
 
-                <View
-                    style={{
-                        height: "40%",
-                        width: 2,
-                        backgroundColor: isFocused
-                            ? colors.white
-                            : colors.secondary,
-                        borderRadius: WP(100),
-                    }}
-                />
-
                 <Text
                     style={{
                         color: isFocused ? colors.white : colors.secondary,
-                        fontSize: HP(2),
+                        fontSize: md,
                         fontFamily: OutfitRegular,
                     }}
                 >
@@ -103,18 +126,77 @@ const MainStack: React.FC = () => {
         );
     };
 
+    const Header = ({ routeName }: { routeName: string }) => {
+        return (
+            <LinearGradient
+                colors={[colors.background, colors.card]}
+                style={{
+                    width: WP(100),
+                    height: HP(8),
+                    backgroundColor: colors.card,
+                    alignItems: "center",
+                    flexDirection: "row",
+                    paddingHorizontal: WP(4),
+                    borderBottomRightRadius: WP(4),
+                    borderBottomLeftRadius: WP(4),
+                    elevation: 8,
+                    justifyContent: "space-between",
+                }}
+            >
+                <Text
+                    style={{
+                        color: colors.text,
+                        fontSize: HP(3),
+                        fontFamily: OutfitRegular,
+                    }}
+                >
+                    {routeName}
+                </Text>
+
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.dispatch(DrawerActions.openDrawer())
+                    }
+                    style={{
+                        padding: WP(2),
+                        borderRadius: WP(2),
+                    }}
+                >
+                    <Animated.View>
+                        <Image
+                            source={require("@/src/assets/images/ui/icons-svg/menu-icon.svg")} //consider change the extension of the image.
+                            style={{
+                                height: HP(3),
+                                aspectRatio: 1,
+                                tintColor: colors.secondary,
+                            }}
+                        />
+                    </Animated.View>
+                </TouchableOpacity>
+            </LinearGradient>
+        );
+    };
+
     //-----------------------------------------------------------------------------------------------------------
 
     return (
         <Drawer.Navigator
             screenOptions={{
-                headerShown: false,
+                headerShown: showHeader,
                 drawerStyle: {
                     backgroundColor: colors.background,
                     width: WP(70),
                     borderRightWidth: 1,
                     borderRightColor: colors.secondary,
                 },
+                header: (props) => (
+                    <HomeHeader
+                        title={routeName}
+                        navigation={() =>
+                            navigation.dispatch(DrawerActions.openDrawer())
+                        }
+                    />
+                ),
             }}
             drawerContent={(props) => (
                 <View
@@ -168,51 +250,6 @@ const MainStack: React.FC = () => {
                             )}
                         </View>
                     </View>
-
-                    {/* {---------------------------------------------------------------------------------------} */}
-
-                    <TouchableOpacity
-                        onPress={logout}
-                        style={{
-                            flexDirection: "row",
-                            gap: WP(4),
-                            paddingHorizontal: WP(4),
-                            alignItems: "center",
-                            backgroundColor: colors.error,
-                            borderRadius: WP(4),
-                            height: HP(6),
-                        }}
-                    >
-                        <View style={{}}>
-                            <Image
-                                source={require(`${iconRef}logout-icon.svg`)}
-                                style={{
-                                    height: HP(3),
-                                    aspectRatio: 1,
-                                    tintColor: colors.white,
-                                }}
-                            />
-                        </View>
-
-                        <View
-                            style={{
-                                height: "40%",
-                                width: 2,
-                                backgroundColor: colors.white,
-                                borderRadius: WP(100),
-                            }}
-                        />
-
-                        <Text
-                            style={{
-                                color: colors.white,
-                                fontSize: HP(2),
-                                fontFamily: OutfitRegular,
-                            }}
-                        >
-                            Logout
-                        </Text>
-                    </TouchableOpacity>
                 </View>
             )}
         >
@@ -220,17 +257,18 @@ const MainStack: React.FC = () => {
                 <Drawer.Screen
                     key={i}
                     name={v.name as any}
-                    component={v.component as any}
                     options={{
                         drawerLabel: v.label,
                         drawerIcon: () => (
                             <Image
                                 source={v.icon}
-                                style={{ height: HP(3), aspectRatio: 1 }}
+                                style={{ height: lg, aspectRatio: 1 }}
                             />
                         ),
                     }}
-                />
+                >
+                    {() => v.component as any}
+                </Drawer.Screen>
             ))}
         </Drawer.Navigator>
     );

@@ -8,11 +8,12 @@ import Styles from "@/src/styles/styles";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import Loading from "../loading/loading";
+import React from "react";
 
 interface SingleButtonProps extends TouchableOpacityProps {
     children: React.ReactNode;
     color: string;
-    style: any;
+    style?: any;
     loading: boolean;
 }
 const SingleButton: React.FC<SingleButtonProps> = ({
@@ -33,7 +34,7 @@ const SingleButton: React.FC<SingleButtonProps> = ({
                 justifyContent: "center",
                 alignItems: "center",
                 height: HP(6),
-                borderRadius: WP(4),
+                borderRadius: WP(2),
             }}
             disabled={disabled || loading}
         >

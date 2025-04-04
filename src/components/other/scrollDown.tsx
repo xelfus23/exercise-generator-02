@@ -4,8 +4,8 @@ import LottieView from "lottie-react-native";
 import { Animated, useColorScheme, View } from "react-native";
 
 interface props {
-    move: number;
-    fade: number;
+    move: Animated.Value;
+    fade: Animated.Value;
 }
 
 const ScrollDown: React.FC<props> = ({ move, fade }) => {
@@ -18,7 +18,7 @@ const ScrollDown: React.FC<props> = ({ move, fade }) => {
         <Animated.View
             style={{
                 position: "absolute",
-                bottom: HP(2),
+                bottom: HP(5),
                 transform: [{ translateY: move }],
                 opacity: fade,
             }}

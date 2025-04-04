@@ -15,6 +15,7 @@ import MainLayout from "./(tabs)/navigation/Main";
 import { useThemeColors } from "../hooks/useThemeColor";
 import { HP, WP } from "../hooks/useDeviceDimension";
 import { StatusBar } from "react-native";
+import React from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

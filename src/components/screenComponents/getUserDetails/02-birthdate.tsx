@@ -158,31 +158,28 @@ const BirthDate: React.FC<props> = ({
 
     const getMonthTextStyle = () => ({
         color:
-            selectedYear && selectedMonth == null
+            selectedYear && !selectedMonth
                 ? colors.primary
-                : selectedYear && selectedMonth != null
+                : selectedYear && selectedMonth
                 ? colors.primary
                 : HexToHexa({ hex: colors.secondary, alpha: 0.2 }),
         fontSize: HP(2),
         paddingHorizontal: WP(8),
         paddingVertical: WP(2),
-        fontFamily: "Outfit-Bold",
+        fontFamily: OutfitBold,
         textAlign: "center",
-        borderWidth: 0.5,
-        borderColor: colors.secondary,
+        borderWidth: !selectedYear && selectedMonth && selectedDate ? 0 : 0.5,
+        borderColor: selectedYear ? colors.secondary : "transparent",
         borderRadius: WP(2),
     });
 
     const getYearTextStyle = () => ({
         fontSize: HP(2),
-        fontFamily: "Outfit-Bold",
+        fontFamily: OutfitBold,
         textAlign: "center",
         paddingHorizontal: WP(8),
         paddingVertical: WP(2),
-        color:
-            selectedMonth != null || selectedYear
-                ? colors.primary
-                : colors.primary,
+        color: selectedMonth || selectedYear ? colors.primary : colors.primary,
         borderWidth: 0.5,
         borderColor: colors.secondary,
         borderRadius: WP(2),
@@ -225,7 +222,7 @@ const BirthDate: React.FC<props> = ({
             <Text
                 style={{
                     fontSize: HP(3),
-                    marginTop: HP(30),
+                    marginTop: HP(20),
                     color: colors.text,
                     fontFamily: OutfitRegular,
                 }}
@@ -288,7 +285,7 @@ const BirthDate: React.FC<props> = ({
                                 style={{
                                     width: "14.28%",
                                     textAlign: "center",
-                                    fontFamily: "Outfit-Bold",
+                                    fontFamily: OutfitBold,
                                     color:
                                         selectedMonth === null
                                             ? HexToHexa({
@@ -308,6 +305,7 @@ const BirthDate: React.FC<props> = ({
                         selectedDate={selectedDate}
                         selectedMonth={selectedMonth}
                         handlePress={handleDayPress}
+                        selectedYear={selectedYear}
                     />
                 </View>
             </View>
@@ -360,7 +358,6 @@ const BirthDate: React.FC<props> = ({
                 flex: 1,
                 padding: WP(4),
                 gap: HP(4),
-                height: HP(100),
                 opacity: fadeIn,
                 justifyContent: "center",
                 alignItems: "center",
