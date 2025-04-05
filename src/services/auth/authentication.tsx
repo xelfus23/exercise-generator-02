@@ -1,20 +1,24 @@
+import React, { createContext, useState, useEffect, useContext } from "react";
 import {
     dummyOtherPlanData,
     dummyPlanData,
 } from "@/src/assets/data/dummyExercise";
+import { exerciseType, planType } from "@/src/types/planTypes";
 import {
     UserDetailsTypes,
     UserProfileTypes,
     userType,
 } from "@/src/types/userTypes";
-import React, { createContext, useState, useEffect, useContext } from "react";
+// import { useNavigation, useRouter } from "expo-router"; // REMOVE THIS IMPORT
+import { useNavigation, useRouter } from "expo-router";
 
 interface authContextProps {
-    children: any;
+    children: React.ReactNode; // Use React.ReactNode for children
 }
 
 interface AuthContextType {
     user: userType | null;
+    setUser: React.Dispatch<React.SetStateAction<userType | null>>; // Correct type for setUser
     isAuthenticated: boolean;
     login: (
         email: string,
@@ -46,10 +50,15 @@ interface AuthContextType {
     everyExercise: any;
     everyCompletedExercise: any;
     completedExerciseToday: any;
+    updateUserData: (uid: string) => Promise<void>; // Changed to async Promise<void> and added uid
+    setPlanData: (v: any) => void;
+    setOtherPlanData: (v: any) => void;
+    needsDetails: boolean; // Add this line
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
+    setUser: () => {}, // Provide an empty function
     isAuthenticated: false,
     login: async () => ({ success: false }),
     logout: async () => ({ success: false }),
@@ -60,52 +69,55 @@ const AuthContext = createContext<AuthContextType>({
     everyExercise: [],
     everyCompletedExercise: [],
     completedExerciseToday: [],
+    updateUserData: async () => {},
+    setPlanData: () => {},
+    setOtherPlanData: () => {},
+    needsDetails: false, // Add this line
 });
+
+// const initialUser: userType = {
+//     uid: "",
+//     firstName: "",
+//     lastName: "",
+//     email: "",
+//     gender: "",
+//     birthdate: {
+//         day: 0,
+//         month: 0,
+//         year: 0,
+//     },
+//     heightAndWeight: {
+//         height: {
+//             value: 0,
+//             unit: "cm",
+//         },
+//         weight: {
+//             value: 0,
+//             unit: "kg",
+//         },
+//     },
+//     fitnessGoal: "",
+//     plan: {
+//         currentPlans: [],
+//         otherPlans: [],
+//     },
+//     fitnessLevel: "",
+//     targetWeight: {
+//         value: 0,
+//         unit: "kg",
+//     },
+//     equipment: [],
+//     preferredTypes: [],
+//     restDays: [],
+//     location: [],
+//     healthCondition: [],
+// };
 
 export const AuthContextProvider: React.FC<authContextProps> = ({
     children,
 }) => {
-    const initialUser = {
-        uid: "0",
-        firstName: "",
-        lastName: "",
-        email: "",
-        gender: "",
-        birthdate: {
-            day: 0,
-            month: 0,
-            year: 0,
-        },
-        heightAndWeight: {
-            height: {
-                value: 0,
-                unit: "cm",
-            },
-            weight: {
-                value: 0,
-                unit: "kg",
-            },
-        },
-        fitnessGoal: "",
-        plan: {
-            currentPlans: [],
-            otherPlans: [],
-        },
-        fitnessLevel: "",
-        targetWeight: {
-            value: 0,
-            unit: "kg",
-        },
-        equipment: [],
-        preferredTypes: [],
-        restDays: [],
-        location: [],
-        healthCondition: [],
-    };
-
-    const [user, setUser] = useState<userType>(initialUser);
+    const [user, setUser] = useState<userType | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
     const [everyExercise, setEveryExercise] = useState<any>([]);
     const [exerciseToday, setExerciseToday] = useState<any>([]);
     const [dailyProgress, setDailyProgress] = useState<number>(0);
@@ -115,144 +127,167 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
     const [completedExerciseToday, setCompletedExerciseToday] = useState<any>(
         []
     );
+    const [needsDetails, setNeedsDetails] = useState<boolean>(false); // ADD THIS LINE
+
+    const [planData, setPlanData] = useState(dummyPlanData);
+    const [otherPlanData, setOtherPlanData] = useState(dummyOtherPlanData);
+
     const today = new Date();
-    const exercisePlans = user.plan.currentPlans;
+    let exerciseKeys: any[] = [];
 
-    let exerciseKeys = [] as any;
-
-    const [dayExercise, setDayExercise] = useState<any>([]);
-
-    const todayFormatted = today.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric", // Include day for comparison
-        year: "numeric",
-        timeZone: "Asia/Manila",
-    });
-
-    const todayWeekDay = today.toLocaleString("en-US", {
-        weekday: "long",
-        timeZone: "Asia/Manila",
-    });
-
-    const todayParts = todayFormatted.split("/") as any; // Split by '/'
-
-    const newTodayFormatted = `${todayWeekDay}, ${todayParts[0] - 1}/${Number(
-        todayParts[1]
-    )}/${todayParts[2].trim()}`; // Rebuild formatted date with adjusted month
-
-    const todayYear = new Date().getFullYear();
-    const todayMonth = new Date().getMonth(); // Adjust to 1-based month
-    const todayDate = new Date().getDate();
-    const newToday = new Date(todayYear, todayMonth, todayDate);
+    const navigation = useNavigation();
 
     const calculateEverything = () => {
-        setExerciseToday([]);
-        setCompletedExerciseToday([]);
-        setEveryCompletedExercise([]);
-        setEveryExercise([]);
+        console.log("Calculating Everything...");
 
-        exercisePlans?.forEach((plan: any) => {
-            plan?.weeks?.map((week: any) => {
-                week?.days?.map((day: any) => {
-                    const dayFormatted = `${day?.weekday}, ${day?.month}/${day?.date}/${day?.year}`;
-                    if (day?.exercises?.length === 0) return;
-                    // const dayDateObj = new Date(dayYear, dayMonth , dayDate);
-                    // const dayDateOjb = new Date(day?.year, day?.month, day?.date);
-                    // if (dayDateOjb < newToday) {
-                    //     addCompletedDay(day);
-                    // }
-                    if (newTodayFormatted === dayFormatted) {
-                        day?.exercises?.map((exe: any) => {
+        let newExerciseToday: any[] = [];
+        let newCompletedExerciseToday: any[] = [];
+        let newEveryCompletedExercise: any[] = [];
+        let newEveryExercise: any[] = [];
+        let newProgress = 0;
+
+        if (!planData || planData.length === 0) {
+            console.warn("planData is empty or null.  Skipping calculation.");
+            return false; // Or handle the empty state appropriately
+        }
+
+        for (const plan of planData) {
+            for (const week of plan.weeks) {
+                for (const day of week.days) {
+                    if (day.exercises.length === 0) continue;
+
+                    const newToday = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate()
+                    );
+
+                    const match = newToday.toISOString() === day.date;
+
+                    if (match) {
+                        day.exercises.forEach((exe: any) => {
                             if (exe) {
                                 if (exe.completed === true) {
-                                    setCompletedExerciseToday((prev: any) => [
-                                        ...prev,
-                                        {
-                                            exercise: exe,
-                                            plan: plan,
-                                        },
-                                    ]);
-                                }
-
-                                setExerciseToday((prev: any) => [
-                                    ...prev,
-                                    {
+                                    newCompletedExerciseToday.push({
                                         exercise: exe,
                                         plan: plan,
-                                    },
-                                ]);
+                                    });
+                                }
+
+                                newExerciseToday.push({
+                                    exercise: exe,
+                                    plan: plan,
+                                });
                             }
                         });
                     }
 
-                    day?.exercises?.map((exe: any) => {
+                    day.exercises.forEach((exe: any) => {
                         exerciseKeys.push(exe.key);
-                        setEveryExercise(exe);
+                        newEveryExercise.push(exe);
                         if (exe.completed === true) {
-                            setEveryCompletedExercise((prev: any) => [
-                                ...prev,
-                                { exercise: exe, plan: plan },
-                            ]);
+                            newEveryCompletedExercise.push({
+                                exercise: exe,
+                                plan: plan,
+                            });
                         }
                     });
-                });
-            });
-        });
-
-        setDayExercise(
-            exerciseToday.filter(
-                (exe: any) =>
-                    exe?.exercise?.name !== "Rest Day" &&
-                    exe?.exercise?.name !== "Rest"
-            )
-        );
-
-        setDailyProgress(
-            (completedExerciseToday?.length / dayExercise?.length) * 100
-        );
-    };
-
-    useEffect(() => {
-        calculateEverything();
-    }, [user]);
-
-    useEffect(() => {
-        updateUser(0);
-        checkDetails();
-    }, [isAuthenticated]);
-
-    const checkDetails = () => {
-        if (user.gender === "male" || "female") {
-            // Check if the user already done sumitting their details.
+                }
+            }
         }
 
-        // if not, redirect the users to getDetals screen.
+        newProgress =
+            (newCompletedExerciseToday?.length / newExerciseToday?.length) *
+            100;
+
+        setExerciseToday(newExerciseToday);
+        setCompletedExerciseToday(newCompletedExerciseToday);
+        setEveryCompletedExercise(newEveryCompletedExercise);
+        setEveryExercise(newEveryExercise);
+        setDailyProgress(newProgress);
+
+        // console.log("newExerciseToday:", newExerciseToday);
+        // console.log("newCompletedExerciseToday:", newCompletedExerciseToday);
     };
 
-    const updateUser = async (uid: number) => {
+    // const checkDetails = () => {
+    //     console.log("Checking details...");
+    //     console.log(user);
+    //     if (isAuthenticated && !user?.uid) {
+    //         console.log("Routing");
+    //         navigation.navigate("Details");
+    //     }
+    // };
+
+    useEffect(() => {
+        if (user?.uid) {
+            updateUserData(user.uid);
+            calculateEverything();
+        }
+    }, [user?.uid]);
+
+    useEffect(() => {
+        setNeedsDetails(isAuthenticated && !user?.uid); // SET needsDetails here
+        console.log(user);
+
+        console.log({ isAuthenticated, user });
+    }, [isAuthenticated, user, user?.uid]);
+
+    const updateUserData = async (uid: string) => {
         try {
-            setUser({
-                ...user,
-                firstName: "John",
-                lastName: "Myers",
-                email: "user@test.com",
+            const fetchedUser: userType = {
+                uid: uid,
+                firstName: "Potato",
+                lastName: "Fries",
+                email: "potato.fries@email.com",
                 plan: {
-                    currentPlans: [...dummyPlanData] as any,
-                    otherPlans: [...dummyOtherPlanData] as any,
+                    currentPlans: planData,
+                    otherPlans: otherPlanData,
                 },
-            });
+                gender: "",
+                birthdate: {
+                    day: 0,
+                    month: 0,
+                    year: 0,
+                },
+                heightAndWeight: {
+                    height: {
+                        value: 0,
+                        unit: "",
+                    },
+                    weight: {
+                        value: 0,
+                        unit: "",
+                    },
+                },
+                fitnessGoal: "",
+                fitnessLevel: "",
+                targetWeight: {
+                    value: 0,
+                    unit: "",
+                },
+                equipment: [],
+                preferredTypes: [],
+                restDays: [],
+                location: [],
+                healthCondition: [],
+            };
+
+            setUser(fetchedUser);
         } catch (e) {
-            console.warn(e);
+            console.warn("Error updating user data:", e);
         }
     };
 
     const login = async (email: string, password: string) => {
         try {
-            await updateUser(0);
+            const newId = "potato";
+            await updateUserData(newId);
             setIsAuthenticated(true);
             return { success: true };
         } catch (e) {
-            return { success: false };
+            console.error("Login failed:", e);
+            return { success: false, error: "Invalid credentials" };
         }
     };
 
@@ -263,11 +298,11 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
         lastName: string
     ) => {
         try {
-            await updateUser(0);
-            // setIsAuthenticated(true);
+            setIsAuthenticated(true);
             return { success: true };
         } catch (e) {
-            return { success: false };
+            console.error("Signup failed:", e);
+            return { success: false, error: "Failed to create user" };
         }
     };
 
@@ -286,22 +321,26 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
         healthCondition: string[]
     ): Promise<{ success: boolean }> => {
         try {
-            await updateUser(0);
             setIsAuthenticated(true);
+            const newId = "potato";
+            await updateUserData(newId);
+
             return { success: true };
         } catch (e) {
+            console.error("Setting user details failed:", e);
             return { success: false };
         }
     };
 
     const logout = async () => {
-        setUser(initialUser);
+        setUser(null);
         setIsAuthenticated(false);
         return { success: true };
     };
 
     const value: AuthContextType = {
         user,
+        setUser,
         isAuthenticated,
         login,
         logout,
@@ -312,6 +351,10 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
         everyExercise,
         everyCompletedExercise,
         completedExerciseToday,
+        updateUserData,
+        setPlanData,
+        setOtherPlanData,
+        needsDetails, // ADD THIS LINE
     };
 
     return (

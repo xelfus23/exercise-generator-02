@@ -4,7 +4,7 @@ import { ProgressChart } from "react-native-chart-kit";
 import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import HexToHexa from "@/src/hooks/useHexa";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import RoundProgressBar from "../../other/progressBar";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { useAuth } from "@/src/services/auth/authentication";
@@ -28,7 +28,7 @@ export default function DailyDashboard({ toggle, busy }: any) {
         data: [validProgress], // Ensure values are between 0 and 1
     };
 
-    console.log("Chart Data:", data); // Log the final data being used
+    // console.log("Chart Data:", data); // Log the final data being used
 
     return (
         <View
@@ -36,7 +36,7 @@ export default function DailyDashboard({ toggle, busy }: any) {
                 flexDirection: "row",
                 gap: WP(4),
                 marginHorizontal: WP(3),
-                marginVertical: WP(3)
+                marginVertical: WP(3),
             }}
         >
             <LinearGradient

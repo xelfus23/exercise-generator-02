@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useRoute } from "@react-navigation/native";
-import { ExerciseScreenParams } from "@/src/app/(tabs)/navigation/type"; // Import your type
+import { ExerciseScreenParams } from "@/src/types/stackType"; // Import your type
 import { RouteProp } from "@react-navigation/native";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";

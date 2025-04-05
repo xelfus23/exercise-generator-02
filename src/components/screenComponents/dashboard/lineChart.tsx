@@ -135,7 +135,7 @@ const LineChartBlock = () => {
         const allDayCalories: any = [];
         const exerciseDataMap: any = {};
 
-        console.log("exercisePlans:", JSON.stringify(exercisePlans, null, 2)); // Log exercisePlans
+        // console.log("exercisePlans:", JSON.stringify(exercisePlans, null, 2)); // Log exercisePlans
 
         exercisePlans?.forEach((plan) => {
             plan?.weeks?.forEach((week) => {
@@ -151,7 +151,7 @@ const LineChartBlock = () => {
                         day.month
                     ).padStart(2, "0")}/${day.date}/${day.year}`; // Ensure consistent date format
 
-                    console.log("dateString (inside day loop):", dateString);
+                    // console.log("dateString (inside day loop):", dateString);
 
                     // Initialize total and completed calories for the *day* to 0
                     let totalCaloriesForDay = 0;
@@ -161,7 +161,7 @@ const LineChartBlock = () => {
                         if (exercise) {
                             const calories = Number(exercise.calorieBurn);
 
-                            console.log("CALORIES", calories);
+                            // console.log("CALORIES", calories);
 
                             if (isNaN(calories)) {
                                 console.warn(
@@ -178,9 +178,9 @@ const LineChartBlock = () => {
                         }
                     });
 
-                    console.log(
-                        `Calories for ${dateString}: total=${totalCaloriesForDay}, completed=${completedCaloriesForDay}`
-                    );
+                    // console.log(
+                    //     `Calories for ${dateString}: total=${totalCaloriesForDay}, completed=${completedCaloriesForDay}`
+                    // );
 
                     // Store the calculated totals in the map
                     exerciseDataMap[dateString] = {
@@ -191,15 +191,15 @@ const LineChartBlock = () => {
             });
         });
 
-        console.log(
-            "exerciseDataMap:",
-            JSON.stringify(exerciseDataMap, null, 2)
-        );
+        // console.log(
+        //     "exerciseDataMap:",
+        //     JSON.stringify(exerciseDataMap, null, 2)
+        // );
 
-        console.log(
-            "weekDaysWithDates:",
-            JSON.stringify(weekDaysWithDates, null, 2)
-        );
+        // console.log(
+        //     "weekDaysWithDates:",
+        //     JSON.stringify(weekDaysWithDates, null, 2)
+        // );
 
         weekDaysWithDates.forEach((day) => {
             // const dateString = `${day.weekday}, ${day.month}/${day.date}/${day.year}`; // Incorrect
@@ -207,7 +207,7 @@ const LineChartBlock = () => {
                 2,
                 "0"
             )}/${day.date}/${day.year}`; // Corrected
-            console.log("dateString (weekDaysWithDates loop):", dateString); //Added console log here
+            // console.log("dateString (weekDaysWithDates loop):", dateString); //Added console log here
             const dayData = exerciseDataMap[dateString] || {
                 totalCalories: 0,
                 completedCalories: 0,
@@ -219,14 +219,14 @@ const LineChartBlock = () => {
             });
         });
 
-        console.log("allDayCalories:", JSON.stringify(allDayCalories, null, 2));
+        // console.log("allDayCalories:", JSON.stringify(allDayCalories, null, 2));
 
         setAllCalories(allDayCalories);
 
-        console.log(
-            "allCalories (after setAllCalories):",
-            JSON.stringify(allCalories, null, 2)
-        );
+        // console.log(
+        //     "allCalories (after setAllCalories):",
+        //     JSON.stringify(allCalories, null, 2)
+        // );
     }, [exercisePlans, weekDaysWithDates]);
 
     useEffect(() => {

@@ -21,7 +21,7 @@ import {
     TextInput,
     TouchableOpacity,
 } from "react-native";
-import { AuthStackParamList } from "../../../navigation/type";
+import { AuthStackParamList } from "../../../../../types/stackType";
 import LinkText from "@/src/components/buttons/linkText";
 import GridBackground from "@/src/components/other/grid-background";
 import { useAuth } from "@/src/services/auth/authentication";
@@ -43,7 +43,7 @@ const SignUp: React.FC = () => {
         try {
             const result = await signup(email, password, firstName, lastName);
             if (result.success) {
-                navigation.navigate("Details");
+                console.log("SIgnup");
             }
         } catch (e) {
             console.log(e);

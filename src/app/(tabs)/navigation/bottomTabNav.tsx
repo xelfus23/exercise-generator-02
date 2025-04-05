@@ -7,7 +7,7 @@ import {
     DrawerStackParamList,
     HomeScreenProps,
     HomeStackParamList,
-} from "./type";
+} from "../../../types/stackType";
 import React, { useEffect, useRef, useState } from "react";
 import {
     Animated,

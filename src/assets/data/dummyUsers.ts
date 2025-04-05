@@ -22,19 +22,25 @@ const today = new Date();
 
 export const ChatRooms = [
     {
-        id: "1",
-        title: "Room 1",
-        lastMessage: "Hello, how are you?",
-        lastMessageTimestamp: getDate(today),
-        user: {
-            id: "1",
-            name: "John Doe",
-            avatar: "https://example.com/avatar.jpg",
+        userId: "1",
+        firstName: "Patrick",
+        lastName: "Medenilla",
+        image: require("@/src/assets/images/ui/photos/user-icon-02.png"),
+        lastMessage: {
+            message: "Nulla elit veniam minim tempor aliqua.",
+            timestamp: {
+                year: getDate(today).year,
+                month: getDate(today).month,
+                day: getDate(today).day,
+                time: getDate(today).time,
+                dayTime: getDate(today).dayTime,
+            },
         },
         chats: [
             {
-                role: "0",
-                message: "Nulla elit veniam minim tempor aliqua.",
+                userId: "patrick",
+                message:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 timestamp: {
                     year: getDate(today).year,
                     month: getDate(today).month,
@@ -44,9 +50,108 @@ export const ChatRooms = [
                 },
             },
             {
-                role: "1",
+                userId: "potato",
                 message:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "potato",
+                message: "Ut enim ad minim veniam",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+        ],
+    },
+    {
+        userId: "2",
+        firstName: "Mik",
+        lastName: "Fajardo",
+        image: require("@/src/assets/images/ui/photos/user-icon-03.png"),
+        lastMessage: {
+            message:
+                "Ipsum duis quis aliquip deserunt anim tempor id id consectetur id cupidatat aliquip nostrud laboris.",
+            timestamp: {
+                year: getDate(today).year,
+                month: getDate(today).month,
+                day: getDate(today).day,
+                time: getDate(today).time,
+                dayTime: getDate(today).dayTime,
+            },
+        },
+        chats: [
+            {
+                userId: "mik",
+                message:
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "potato",
+                message:
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "potato",
+                message:
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "mik",
+                message: "consequat.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "potato",
+                message: "tion ullamco laboris nisi ut ea commodo consequat.",
+                timestamp: {
+                    year: getDate(today).year,
+                    month: getDate(today).month,
+                    day: getDate(today).day,
+                    time: getDate(today).time,
+                    dayTime: getDate(today).dayTime,
+                },
+            },
+            {
+                userId: "mik",
+                message: "laboris nisi ut consequat.",
                 timestamp: {
                     year: getDate(today).year,
                     month: getDate(today).month,

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ChatStackParamList } from "./type";
+import { ChatStackParamList } from "../../../types/stackType";
 import ChatHeads from "../screens/Drawer/chat/chatHeads";
 import ChatScreen from "../screens/Drawer/chat/chatScreen";
 import ChatHeader from "@/src/components/header/chatHeader";

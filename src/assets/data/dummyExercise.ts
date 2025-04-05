@@ -3,38 +3,35 @@ const today = new Date();
 const next7Days = [];
 
 for (let i = 0; i < 7; i++) {
-    const nextDay = new Date(today);
+    const newToday = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + i
+    );
 
-    nextDay.setDate(today.getDate() + i);
-    next7Days.push(nextDay);
+    // Get the weekday name from newToday:
+    const weekDay = newToday.toLocaleDateString("en-US", { weekday: "long" });
+
+    // console.log(newToday);
+    next7Days.push({
+        date: newToday,
+        weekday: weekDay,
+    });
 }
 
 const next7DaysData = next7Days.map((day) => {
-    const formattedDate = day.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "Asia/Manila",
-    });
-
-    const parts = formattedDate.split(" ");
-
-    const monthNumbers = day.getMonth(); // Access month number (0-11)
+    // console.log("DAY", typeof(day.date));
     return {
-        weekday: parts[0].replace(",", ""),
-        month: parts[1].replace(",", ""),
-        day: parts[2].replace(",", ""),
-        year: parts[3].replace(",", ""),
-        monthNumber: monthNumbers,
+        weekday: day.weekday,
+        date: day.date.toISOString(),
     };
 });
 
 export const dummyPlanData = [
     {
-        planTitle: "John's Home Fitness Plan",
+        planTitle: "Potato's Home Fitness Plan",
         planDescription:
-            "This beginner-friendly home workout plan is designed for John Myers, focusing on strength training, flexibility, and core work.  Exercises are chosen to be easily performed at home with minimal equipment.  The plan emphasizes proper form and gradual progression to avoid injury and maximize results. Rest is crucial; ensure adequate sleep and hydration.",
+            "This beginner-friendly home workout plan is designed for Potato Fries, focusing on strength training, flexibility, and core work.  Exercises are chosen to be easily performed at home with minimal equipment.  The plan emphasizes proper form and gradual progression to avoid injury and maximize results. Rest is crucial; ensure adequate sleep and hydration.",
         generalObjectives: [
             "Increase strength and muscle mass.",
             "Improve posture and flexibility",
@@ -68,10 +65,8 @@ export const dummyPlanData = [
                         estimatedTime: 1800,
                         completed: false,
                         dayKey: `${dayKey}`,
-                        weekday: String(day.weekday),
-                        date: String(day.day),
-                        month: String(day.monthNumber),
-                        year: String(day.year),
+                        weekday: day.weekday,
+                        date: day.date,
                         motivation: "You got this!",
                         exerciseTips: "Focus on form!",
                         exercises: [
@@ -105,7 +100,7 @@ export const dummyPlanData = [
                                 ],
                                 reps: 0,
                                 sets: 2,
-                                distance: 0,
+                                distance: { type: "km", value: 0 },
                                 type: "duration",
                                 duration: 30,
                                 equipment: ["None"],
@@ -151,12 +146,20 @@ export const dummyPlanData = [
                                 ],
                                 reps: 10,
                                 sets: 2,
-                                distance: 0,
+                                distance: { type: "km", value: 0 },
                                 type: "reps",
                                 duration: 0,
                                 equipment: ["None"],
                                 calorieBurn: 5,
                                 completed: index !== 0 ? false : true,
+                                animation: [
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
+                                ],
                             },
                             {
                                 key: "ex3-003",
@@ -192,6 +195,14 @@ export const dummyPlanData = [
                                 equipment: ["None"],
                                 calorieBurn: 100,
                                 completed: index !== 0 ? false : true,
+                                animation: [
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                    require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
+                                ],
                             },
                         ],
                     };
@@ -203,7 +214,7 @@ export const dummyPlanData = [
 
 export const dummyOtherPlanData = [
     {
-        planTitle: "John Beginner's Bodyweight Plan",
+        planTitle: "Potato Fries' Beginner Bodyweight Plan",
         planDescription:
             "This is a bodyweight workout plan designed for beginners who want to improve their overall fitness. It focuses on fundamental exercises that can be performed anywhere, without any equipment. The plan emphasizes proper form, controlled movements, and gradual progression to build a solid foundation for more advanced training.",
         generalObjectives: [
@@ -265,7 +276,7 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 0,
                                     sets: 2,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "duration",
                                     duration: 30,
                                     equipment: ["None"],
@@ -274,6 +285,10 @@ export const dummyOtherPlanData = [
                                     animation: [
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
                                 },
                                 {
@@ -304,12 +319,20 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 10,
                                     sets: 2,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "reps",
                                     duration: 0,
                                     equipment: ["None"],
                                     calorieBurn: 8,
                                     completed: false,
+                                    animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
+                                    ],
                                 },
                             ];
                             break;
@@ -350,15 +373,19 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 0,
                                     sets: 3,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "duration",
                                     duration: 30,
                                     equipment: ["None"],
                                     calorieBurn: 6,
                                     completed: false,
                                     animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
                                 },
                             ];
@@ -398,6 +425,10 @@ export const dummyOtherPlanData = [
                                     calorieBurn: 30,
                                     completed: false,
                                     animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
@@ -412,10 +443,8 @@ export const dummyOtherPlanData = [
                         estimatedTime: 1200, // Reduced time
                         completed: false,
                         dayKey: `${dayKey}`,
-                        weekday: String(day.weekday),
-                        date: String(day.day),
-                        month: String(day.monthNumber),
-                        year: String(day.year),
+                        weekday: day.weekday,
+                        date: day.date,
                         motivation: "Keep pushing! You're doing great!",
                         exerciseTips: "Focus on proper form over speed.",
                         exercises: exercises,
@@ -487,7 +516,7 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 0,
                                     sets: 2,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "duration",
                                     duration: 30,
                                     equipment: ["None"],
@@ -496,6 +525,10 @@ export const dummyOtherPlanData = [
                                     animation: [
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
                                 },
                                 {
@@ -526,12 +559,20 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 10,
                                     sets: 2,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "reps",
                                     duration: 0,
                                     equipment: ["None"],
                                     calorieBurn: 8,
                                     completed: false,
+                                    animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
+                                    ],
                                 },
                             ];
                             break;
@@ -572,15 +613,19 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 0,
                                     sets: 3,
-                                    distance: 0,
+                                    distance: { type: "km", value: 0 },
                                     type: "duration",
                                     duration: 30,
                                     equipment: ["None"],
                                     calorieBurn: 6,
                                     completed: false,
                                     animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
                                 },
                             ];
@@ -613,13 +658,17 @@ export const dummyOtherPlanData = [
                                     ],
                                     reps: 0,
                                     sets: 1,
-                                    distance: { type: "km", value: 0.5 },
+                                    distance: { type: "km", value: 1 },
                                     type: "distance",
                                     duration: 0,
                                     equipment: ["None"],
                                     calorieBurn: 30,
                                     completed: false,
                                     animation: [
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-01.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-02.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-03.svg"),
+                                        require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-04.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-05.svg"),
                                         require("@/src/assets/images/ui/exercises/jumping-jacks/jumping-jacks-06.svg"),
                                     ],
@@ -634,10 +683,8 @@ export const dummyOtherPlanData = [
                         estimatedTime: 1200, // Reduced time
                         completed: false,
                         dayKey: `${dayKey}`,
-                        weekday: String(day.weekday),
-                        date: String(day.day),
-                        month: String(day.monthNumber),
-                        year: String(day.year),
+                        weekday: day.weekday,
+                        date: day.date,
                         motivation: "Keep pushing! You're doing great!",
                         exerciseTips: "Focus on proper form over speed.",
                         exercises: exercises,

@@ -2,7 +2,7 @@ import {
     HomeStackParamList,
     MainExerciseParams,
     ExerciseStackParamList,
-} from "@/src/app/(tabs)/navigation/type";
+} from "@/src/types/stackType";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import {
     lg,

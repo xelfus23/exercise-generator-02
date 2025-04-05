@@ -1,7 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeStack from "./bottomTabNav";
-import { DrawerStackParamList } from "./type";
-import Settings from "../screens/Drawer/settings/settings";
+import { DrawerStackParamList } from "../../../types/stackType";
+import Settings from "../screens/Drawer/settings/settingsMain/settingsMain";
 import {
     Animated,
     StyleSheet,
@@ -23,6 +23,7 @@ import { DrawerActions } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
 import HomeHeader from "@/src/components/header/homeHeader";
 import GridBackground from "@/src/components/other/grid-background";
+import SettingsStackNav from "./settingsStackNav";
 
 const MainStack: React.FC = () => {
     const Drawer = createDrawerNavigator<DrawerStackParamList>();
@@ -73,7 +74,7 @@ const MainStack: React.FC = () => {
         {
             name: "SettingsDrawer",
             component: (
-                <Settings
+                <SettingsStackNav
                     setRouteName={setRouteName}
                     setShowHeader={setShowHeader}
                 />
@@ -126,57 +127,6 @@ const MainStack: React.FC = () => {
         );
     };
 
-    const Header = ({ routeName }: { routeName: string }) => {
-        return (
-            <LinearGradient
-                colors={[colors.background, colors.card]}
-                style={{
-                    width: WP(100),
-                    height: HP(8),
-                    backgroundColor: colors.card,
-                    alignItems: "center",
-                    flexDirection: "row",
-                    paddingHorizontal: WP(4),
-                    borderBottomRightRadius: WP(4),
-                    borderBottomLeftRadius: WP(4),
-                    elevation: 8,
-                    justifyContent: "space-between",
-                }}
-            >
-                <Text
-                    style={{
-                        color: colors.text,
-                        fontSize: HP(3),
-                        fontFamily: OutfitRegular,
-                    }}
-                >
-                    {routeName}
-                </Text>
-
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.dispatch(DrawerActions.openDrawer())
-                    }
-                    style={{
-                        padding: WP(2),
-                        borderRadius: WP(2),
-                    }}
-                >
-                    <Animated.View>
-                        <Image
-                            source={require("@/src/assets/images/ui/icons-svg/menu-icon.svg")} //consider change the extension of the image.
-                            style={{
-                                height: HP(3),
-                                aspectRatio: 1,
-                                tintColor: colors.secondary,
-                            }}
-                        />
-                    </Animated.View>
-                </TouchableOpacity>
-            </LinearGradient>
-        );
-    };
-
     //-----------------------------------------------------------------------------------------------------------
 
     return (
@@ -209,7 +159,7 @@ const MainStack: React.FC = () => {
                     <View style={{ gap: HP(2) }}>
                         <TouchableOpacity style={{ marginTop: HP(10) }}>
                             <Image
-                                source={require(`${photoRef}usericon-1.png`)}
+                                source={require(`${photoRef}user-icon-01.png`)}
                                 style={{
                                     height: HP(15),
                                     aspectRatio: 1,

@@ -31,17 +31,13 @@ const MainHome: React.FC<homeProps> = ({
     >();
     const scrollViewRef = useRef<any>(null);
 
-    const handleBackPress = () => {
+    useEffect(() => {
         if (scrollViewRef?.current) {
-            scrollViewRef?.current?.scrollTo({ x: WP(0), animated: true });
+            if (scrollViewRef.current === WP(0)) {
+                setSelectedGeneratedPlan(null);
+            }
         }
-        setTimeout(() => {
-            setSelectedGeneratedPlan(null);
-        }, 100);
-
-        setTabBarVisible(true);
-        setShowHeader(true);
-    };
+    }, [selectedGeneratedPlan, scrollViewRef.current]);
 
     const onSelectGeneratedPlan = (item: any) => {
         setSelectedGeneratedPlan(item);
@@ -78,9 +74,10 @@ const MainHome: React.FC<homeProps> = ({
                 >
                     <OtherExercise
                         item={selectedGeneratedPlan}
-                        back={handleBackPress}
                         setTabBar={setTabBarVisible}
                         setShowHeader={setShowHeader}
+                        scrollViewRef={scrollViewRef}
+                        setSelectedGeneratedPlan={setSelectedGeneratedPlan}
                     />
                 </View>
             )}

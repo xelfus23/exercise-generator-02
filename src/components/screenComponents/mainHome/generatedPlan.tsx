@@ -12,14 +12,16 @@ import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 
 export default function OtherExercise({
     item,
-    back,
     setTabBar,
     setShowHeader,
+    scrollViewRef,
+    setSelectedGeneratedPlan,
 }: {
     item: any;
-    back: any;
     setTabBar: any;
     setShowHeader: any;
+    scrollViewRef: any;
+    setSelectedGeneratedPlan: any;
 }) {
     const Stack = createStackNavigator();
     const colors = useThemeColors();
@@ -36,8 +38,8 @@ export default function OtherExercise({
                         <TitleScreen
                             {...props}
                             item={item}
-                            back={back}
                             colors={colors}
+                            scrollViewRef={scrollViewRef}
                         />
                     )}
                 </Stack.Screen>
@@ -49,10 +51,11 @@ export default function OtherExercise({
                         <GeneratedExerciseDescription
                             {...props}
                             item={item}
-                            back={back}
                             colors={colors}
                             setTabBar={setTabBar}
                             setShowHeader={setShowHeader}
+                            scrollViewRef={scrollViewRef}
+                            setSelectedGeneratedPlan={setSelectedGeneratedPlan}
                         />
                     )}
                 </Stack.Screen>
@@ -64,13 +67,13 @@ export default function OtherExercise({
 const TitleScreen = ({
     route,
     item,
-    back,
     colors,
+    scrollViewRef,
 }: {
     route: any;
     item: any;
-    back: any;
     colors: any;
+    scrollViewRef: any;
 }) => {
     const navigation = useNavigation<any>();
     return (
@@ -136,8 +139,8 @@ const TitleScreen = ({
                     onPress={() =>
                         navigation.navigate("otherExerciseContent", {
                             item: item,
-                            back: back,
                             colors: colors,
+                            scrollViewRef: scrollViewRef,
                         })
                     } // Pass item as params
                 >

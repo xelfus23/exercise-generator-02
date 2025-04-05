@@ -8,12 +8,12 @@ import { md, OutfitBold, xxxl } from "@/src/hooks/useFonts";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import {
     AuthStackParamList,
     HomeStackParamList,
-} from "../../../navigation/type";
+} from "../../../../../types/stackType";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"; // Import
 import { useNavigation } from "expo-router";
 import LinkText from "@/src/components/buttons/linkText";
@@ -46,7 +46,14 @@ const Login: React.FC = () => {
     ];
 
     const handleLogin = async () => {
-        await login("Test", "User");
+        try {
+            const res = await login("Patato", "potato123");
+            if (res.success) {
+                console.log("Login success");
+            }
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (

@@ -1,3 +1,4 @@
+import { routeProps } from "@/src/app/(tabs)/navigation/settingsStackNav";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { md, OutfitRegular, xl } from "@/src/hooks/useFonts";
 import HexToHexa from "@/src/hooks/useHexa";
@@ -7,31 +8,28 @@ import { Image } from "expo-image";
 import { useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-interface props {
-    setRouteName: (v: string) => void;
-    setShowHeader: (v: boolean) => void;
-}
-const Settigs: React.FC<props> = ({ setRouteName, setShowHeader }) => {
-    useFocusEffect(
-        useCallback(() => {
-            setRouteName("Settings");
-        }, [])
-    );
 
+const Settings: React.FC<routeProps> = ({ setRouteName, setShowHeader }) => {
     const navigation = useNavigation<any>();
+
     const colors = useThemeColors();
     const { logout } = useAuth();
     const ref = "@/src/assets/images/ui/icons-svg/";
 
+    const nav = (toWhere: any) => {
+        setShowHeader(false);
+        navigation.navigate(toWhere);
+    };
+
     const userSettings = [
         {
             label: "Profile",
-            navigation: () => navigation.navigate("profile"),
+            navigation: () => nav("profile-settings"),
             icon: require(`${ref}profile-icon.svg`),
         },
         {
             label: "Security",
-            navigation: () => navigation.navigate("security"),
+            navigation: () => nav("security-settings"),
             icon: require(`${ref}security-icon.svg`),
         },
     ];
@@ -39,7 +37,7 @@ const Settigs: React.FC<props> = ({ setRouteName, setShowHeader }) => {
     const appSettings = [
         {
             label: "Notifications",
-            navigation: () => navigation.navigate("notifications"),
+            navigation: () => nav("notification-settings"),
             icon: require(`${ref}notification-icon.svg`),
         },
         // {
@@ -171,4 +169,4 @@ const Settigs: React.FC<props> = ({ setRouteName, setShowHeader }) => {
     );
 };
 
-export default Settigs;
+export default Settings;

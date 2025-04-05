@@ -4,7 +4,7 @@ import MainExercise from "../screens/Main/main-exercise/mainExercise";
 import ExerciseScreen from "../screens/Main/main-exercise/exerciseScreen";
 import GridBackground from "@/src/components/other/grid-background";
 import React from "react";
-import { ExerciseScreenParams } from "./type";
+import { ExerciseScreenParams } from "../../../types/stackType";
 
 const Stack = createNativeStackNavigator<ExerciseStackParamList>(); // Add type here
 
@@ -25,33 +25,34 @@ const ExerciseNavigator: React.FC<props> = ({
     setShowHeader,
     setTabBarVisible,
 }) => {
+    const ExerciseScreenStack = () => (
+        <ExerciseScreen
+            setShowHeader={setShowHeader}
+            setTabBarVisible={setTabBarVisible}
+        />
+    );
+
+    const MainExerciseStack = () => (
+        <>
+            <MainExercise
+                navigation={navigator}
+                setRouteName={setRouteName}
+                setShowHeader={setShowHeader}
+                setTabBarVisible={setTabBarVisible}
+            />
+            <GridBackground zIndex={-1} />
+        </>
+    );
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown: false,
             }}
         >
-            <Stack.Screen name="mainExercise">
-                {() => (
-                    <>
-                        <MainExercise
-                            navigation={navigator}
-                            setRouteName={setRouteName}
-                            setShowHeader={setShowHeader}
-                            setTabBarVisible={setTabBarVisible}
-                        />
-                        <GridBackground zIndex={-1} />
-                    </>
-                )}
-            </Stack.Screen>
+            <Stack.Screen name="mainExercise">{MainExerciseStack}</Stack.Screen>
             <Stack.Screen
                 name="exerciseScreen"
-                component={() => (
-                    <ExerciseScreen
-                        setShowHeader={setShowHeader}
-                        setTabBarVisible={setTabBarVisible}
-                    />
-                )}
+                component={ExerciseScreenStack}
             />
         </Stack.Navigator>
     );

@@ -12,7 +12,7 @@ interface ScreenProps {
 
 const WelcomeScreen1: React.FC<ScreenProps> = ({ handleScroll, navigator }) => {
     const colors = useThemeColors();
-    console.log("Welcome 1");
+    // console.log("Welcome 1");
 
     return (
         <View

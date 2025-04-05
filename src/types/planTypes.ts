@@ -1,3 +1,8 @@
+type distanceType = {
+    type: string;
+    value: number;
+};
+
 export type exerciseType = {
     key: string;
     name: string;
@@ -9,12 +14,12 @@ export type exerciseType = {
     reminders: string[];
     reps?: number;
     sets?: number;
-    distance?: number;
+    distance?: distanceType;
     duration?: number;
     equipment: string[];
     calorieBurn: number;
     completed: boolean;
-    animation: string;
+    animation: string[];
 };
 
 export type dayType = {
@@ -25,15 +30,13 @@ export type dayType = {
     dayKey: string;
     weekday: string;
     date: string;
-    month: string;
-    year: string;
     motivation: string;
     exerciseTips: string;
     exercises: exerciseType[];
 };
 
 export type weekType = {
-    weekNumber: string;
+    weekNumber: number;
     weekDescription: string;
     weekKey: string;
     weekObjectives: string[];

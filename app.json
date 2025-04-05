@@ -1,6 +1,6 @@
 {
     "expo": {
-        "name": "exercise-generator-02",
+        "name": "AI Fitness App",
         "slug": "exercise-generator-02",
         "version": "1.0.0",
         "orientation": "portrait",
@@ -14,8 +14,9 @@
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./src/assets/images/app/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            }
+                "backgroundColor": "#0045f5"
+            },
+            "package": "com.ai.fit.recommender"
         },
         "web": {
             "bundler": "metro",
@@ -30,12 +31,20 @@
                     "image": "./src/assets/images/app/splash-icon.png",
                     "imageWidth": 200,
                     "resizeMode": "contain",
-                    "backgroundColor": "#ffffff"
+                    "backgroundColor": "#0045f5"
                 }
             ]
         ],
         "experiments": {
             "typedRoutes": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "c45f853a-7b38-4f6f-8584-bb325fb9ed3b"
+            }
         }
     }
 }

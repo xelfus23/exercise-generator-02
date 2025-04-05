@@ -62,7 +62,7 @@ const WelcomeScreen2: React.FC<ScreenProps> = ({ navigator, screenIndex }) => {
         }
     }, [screenIndex]);
 
-    console.log("Welcome 2");
+    // console.log("Welcome 2");
 
     return (
         <View

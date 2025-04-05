@@ -1,6 +1,6 @@
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { DrawerActions, RouteProp, useRoute } from "@react-navigation/native";
-import { ChatStackParamList } from "../../../navigation/type";
+import { ChatStackParamList } from "../../../../../types/stackType";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
@@ -48,10 +48,8 @@ const ChatScreen: React.FC<props> = ({
     const renderChatItem = ({ item, index }: { item: any; index: any }) => (
         <ChatBubble
             text={item.message}
-            role={item.role}
+            userid={item.userId}
             timestamp={item.timestamp}
-            // flag={item.flag}
-            user={u?.firstName}
             index={index}
             chatLength={user?.chats?.length}
             typing={loading}

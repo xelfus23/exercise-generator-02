@@ -17,9 +17,17 @@ import { Image } from "expo-image";
 import SingleButton from "../../buttons/single-button";
 import { exerciseType, planType } from "@/src/types/planTypes";
 import { useAuth } from "@/src/services/auth/authentication";
+
 const Days: React.FC = () => {
     const today = useMemo(() => new Date(), []);
-    const { user } = useAuth();
+    const newToday = useMemo(
+        () => new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+        [today]
+    );
+
+    // Mock user data with multiple plans (for prototype purposes)
+
+    const { user } = useAuth(); // Commented out for prototype
     const [currentDate, setCurrentDate] = useState(today);
     const [days, setDays] = useState<dayType[]>([]);
     const colors = useThemeColors();
@@ -44,38 +52,34 @@ const Days: React.FC = () => {
         return `${month}/${day}/${year}`;
     };
 
-    const isSameDate = (date1: Date, date2: Date): boolean => {
-        return (
-            date1.getDate() === date2.getDate() &&
-            date1.getMonth() === date2.getMonth() &&
-            date1.getFullYear() === date2.getFullYear()
-        );
-    };
-
     const getDays = useCallback(() => {
-        if (!plan) return;
+        if (!plan) return [];
         const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
-        const daysInCurrentMonth = daysInMonth(month, year);
-        const firstDayOfMonth = new Date(year, month - 1, 1);
+        const month = currentDate.getMonth(); // Month is 0-indexed
+        const daysInCurrentMonth = daysInMonth(month + 1, year);
+        const firstDayOfMonth = new Date(year, month, 1);
         const leadingBlanks = firstDayOfMonth.getDay();
         const daysArray: dayType[] = [];
 
         for (let i = 1; i <= daysInCurrentMonth; i++) {
-            const date = new Date(year, month - 1, i);
-            const isToday = isSameDate(date, today);
-            let exe = undefined;
+            const date = new Date(year, month, i);
+            const isToday = newToday.toDateString() === date.toDateString();
+
+            let exercisesForDay: exerciseType[] = []; // Initialize an empty array
 
             plan.forEach((planItem: planType) => {
                 planItem.weeks.forEach((week) => {
                     week.days.forEach((dayPlan) => {
                         const planDate = new Date(
-                            Number(dayPlan.year),
-                            Number(dayPlan.month),
-                            Number(dayPlan.date)
-                        );
-                        if (isSameDate(date, planDate)) {
-                            exe = dayPlan.exercises;
+                            dayPlan.date as Date
+                        ).toDateString();
+
+                        if (date.toDateString() === planDate) {
+                            // Merge exercises if the date matches
+                            exercisesForDay = [
+                                ...exercisesForDay,
+                                ...dayPlan.exercises,
+                            ];
                         }
                     });
                 });
@@ -85,16 +89,16 @@ const Days: React.FC = () => {
                 day: String(i),
                 isToday,
                 weekday: `${date.getDay()}`,
-                exe,
+                exe: exercisesForDay, // Assign the merged exercises
             });
         }
 
         return daysArray;
-    }, [currentDate, daysInMonth, plan, today]);
+    }, [currentDate, daysInMonth, plan, newToday]);
 
     useEffect(() => {
-        setDays(getDays() || []);
-    }, [plan]);
+        setDays(getDays());
+    }, [getDays]);
 
     const getWeekDays = useCallback((day: number) => {
         const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -116,7 +120,7 @@ const Days: React.FC = () => {
             "November",
             "December",
         ];
-        return monthNames[month - 1];
+        return monthNames[month]; // Month is 0-indexed, so no need to subtract 1 here
     }, []);
 
     // Calculate the number of empty cells needed before the first day of the month
@@ -151,8 +155,6 @@ const Days: React.FC = () => {
             const day = days.find((d) => Number(d.day) === i); // Find the day object in the days array
             const dayKey = `day-${i}`; // Unique key for each day cell
 
-            console.log(day);
-
             cells.push(
                 <TouchableOpacity
                     key={dayKey}
@@ -183,20 +185,22 @@ const Days: React.FC = () => {
                     >
                         {day?.day}
                     </Text>
-                    {day?.exe?.map((exe: exerciseType, index: number) => (
-                        <View key={`exe-${index}`}>
-                            <Text
-                                style={{
-                                    fontSize: xsm,
-                                    color: exe.completed
-                                        ? colors.success
-                                        : colors.text,
-                                }}
-                            >
-                                • {exe.name}
-                            </Text>
-                        </View>
-                    ))}
+                    {day?.exe?.map((exe: exerciseType, index: number) => {
+                        return (
+                            <View key={`exe-${index}`}>
+                                <Text
+                                    style={{
+                                        fontSize: xsm,
+                                        color: exe.completed
+                                            ? colors.success
+                                            : colors.text,
+                                    }}
+                                >
+                                    • {exe.name}
+                                </Text>
+                            </View>
+                        );
+                    })}
                 </TouchableOpacity>
             );
 
@@ -250,7 +254,11 @@ const Days: React.FC = () => {
                     </View>
                 </TouchableOpacity>
             </View>
-            <Modal visible={isModalVisible} style={{ flex: 1 }} animationType="slide">
+            <Modal
+                visible={isModalVisible}
+                style={{ flex: 1 }}
+                animationType="slide"
+            >
                 <ScrollView
                     horizontal
                     style={{
@@ -273,7 +281,7 @@ const Days: React.FC = () => {
                                     { color: colors.text },
                                 ]}
                             >
-                                {getMonthName(currentDate.getMonth() + 1)}{" "}
+                                {getMonthName(currentDate.getMonth())}{" "}
                                 {currentDate.getFullYear()}
                             </Text>
                         </View>

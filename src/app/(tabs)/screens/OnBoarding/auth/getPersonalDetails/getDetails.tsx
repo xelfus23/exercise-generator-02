@@ -97,8 +97,10 @@ const GetDetails: React.FC = () => {
             );
             if (res.success) {
                 Alert.alert("Success!", "Workout plan created");
+                setLoading(false);
             } else {
                 Alert.alert("Error", "Registration Failed Please try again");
+                setLoading(false);
             }
         }, 5000);
     };
@@ -231,7 +233,7 @@ const GetDetails: React.FC = () => {
 
     useEffect(() => {
         const listenerId = YOffset.addListener(({ value }) => {
-            console.log("YOffset Value:", value);
+            // console.log("YOffset Value:", value);
             setYvalue(value);
         });
 

@@ -13,23 +13,36 @@ import { LinearGradient } from "expo-linear-gradient";
 import HexToHexa from "@/src/hooks/useHexa";
 import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
 import ChatHeader from "../../header/chatHeader";
+import { useAuth } from "@/src/services/auth/authentication";
+import { userType } from "@/src/types/userTypes";
+import { planType } from "@/src/types/planTypes";
+import {
+    dummyOtherPlanData,
+    dummyPlanData,
+} from "@/src/assets/data/dummyExercise";
 
 export default function GeneratedExerciseDescription({
     item,
-    back,
     colors,
     setTabBar,
     setShowHeader,
+    scrollViewRef,
+    setSelectedGeneratedPlan,
 }: {
     item: any;
-    back: any;
     colors: any;
     setTabBar: any;
     setShowHeader: any;
+    scrollViewRef: any;
+    setSelectedGeneratedPlan: any;
 }) {
     const [adding, setAdding] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const { user, updateUserData, setUser, setOtherPlanData, setPlanData } =
+        useAuth();
+
+    if (!user) return;
 
     useEffect(() => {
         setTabBar(false);
@@ -72,9 +85,22 @@ export default function GeneratedExerciseDescription({
         animateText(true);
     };
 
+    const goBack = () => {
+        if (scrollViewRef?.current) {
+            scrollViewRef?.current?.scrollTo({ x: WP(0), animated: true });
+            setSelectedGeneratedPlan(null);
+        }
+        setTabBar(true);
+        setShowHeader(true);
+    };
+
     const addToPlan = async () => {
         setAdding(true);
-        back();
+        setPlanData((prev: planType[]) => [...prev, item]);
+        setOtherPlanData((prev: planType[]) =>
+            prev.filter((v) => v.planTitle !== item.planTitle)
+        );
+        goBack();
 
         // try {
         //     const userDocRef = doc(db, "users", currentUser.uid);
@@ -111,7 +137,8 @@ export default function GeneratedExerciseDescription({
 
     const deleteExercise = async () => {
         setDeleting(true);
-        back();
+        goBack();
+
         // try {
         //     const userDocRef = doc(db, "users", currentUser.uid);
         //     const subCollectionRef = collection(userDocRef, "exercisePlans");
@@ -140,7 +167,7 @@ export default function GeneratedExerciseDescription({
     };
 
     const getAllPlanExercise = (item: any) => {
-        console.log(item.weeks?.length);
+        // console.log(item.weeks?.length);
         item.weeks.map((v: any) => {
             // v.week.map((v2) => console.log(v2));
         });
@@ -154,7 +181,7 @@ export default function GeneratedExerciseDescription({
         <View style={{ flex: 1 }}>
             <ChatHeader
                 title={item.planTitle}
-                navigation={back}
+                navigation={goBack}
                 onChat={false}
             />
             <View

@@ -21,7 +21,7 @@ const OnBoarding: React.FC = () => {
         setScreenIndex(screenIndex);
     };
 
-    console.log("ONboarding");
+    // console.log("ONboarding");
 
     return (
         <View style={{ flex: 1, backgroundColor: colors.background }}>

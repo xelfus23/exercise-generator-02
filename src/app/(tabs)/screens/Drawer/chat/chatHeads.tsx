@@ -13,8 +13,10 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { ChatStackParamList } from "../../../navigation/type";
+import { ChatStackParamList } from "../../../../../types/stackType";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ChatRooms } from "@/src/assets/data/dummyUsers";
+import { ChatRoomType, chatsType } from "@/src/types/chatTypes";
 
 type ChatProps = NativeStackNavigationProp<ChatStackParamList, "ChatScreen">;
 
@@ -31,6 +33,13 @@ const ChatHeads: React.FC<props> = ({
 }) => {
     const colors = useThemeColors();
     const navigation = useNavigation<ChatProps>();
+    const [chatRooms, setChatRoooms] = useState<ChatRoomType[]>(ChatRooms);
+    const [pressedIndex, setPressedIndex] = useState<number | null>(null);
+
+    useEffect(() => {
+        setChatRoooms(ChatRooms)
+    },[ChatRooms.length])
+
 
     useFocusEffect(
         useCallback(() => {
@@ -38,118 +47,6 @@ const ChatHeads: React.FC<props> = ({
             setShowHeader(true);
         }, [])
     );
-
-    const getDate = (date: any) => {
-        const dateVal = date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-
-        const splittedDate = dateVal.split(" ");
-
-        return {
-            year: splittedDate[2],
-            month: splittedDate[0],
-            day: splittedDate[1],
-            time: splittedDate[3],
-            dayTime: splittedDate[4],
-        };
-    };
-
-    const today = new Date();
-
-    const [users, setUsers] = useState([
-        {
-            userId: 1,
-            firstName: "Patrick",
-            lastName: "Medenilla",
-            image: require("@/src/assets/images/ui/photos/nature.png"),
-            lastMessage: {
-                message: "Nulla elit veniam minim tempor aliqua.",
-                timestamp: {
-                    year: getDate(today).year,
-                    month: getDate(today).month,
-                    day: getDate(today).day,
-                    time: getDate(today).time,
-                    dayTime: getDate(today).dayTime,
-                },
-            },
-            chats: [
-                {
-                    role: "patrick",
-                    message:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                    timestamp: {
-                        year: getDate(today).year,
-                        month: getDate(today).month,
-                        day: getDate(today).day,
-                        time: getDate(today).time,
-                        dayTime: getDate(today).dayTime,
-                    },
-                },
-                {
-                    role: "John",
-                    message:
-                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                    timestamp: {
-                        year: getDate(today).year,
-                        month: getDate(today).month,
-                        day: getDate(today).day,
-                        time: getDate(today).time,
-                        dayTime: getDate(today).dayTime,
-                    },
-                },
-            ],
-        },
-        {
-            userId: 2,
-            firstName: "Mik",
-            lastName: "Fajardo",
-            image: require("@/src/assets/images/ui/photos/nature-1.png"),
-            lastMessage: {
-                message:
-                    "Ipsum duis quis aliquip deserunt anim tempor id id consectetur id cupidatat aliquip nostrud laboris.",
-                timestamp: {
-                    year: getDate(today).year,
-                    month: getDate(today).month,
-                    day: getDate(today).day,
-                    time: getDate(today).time,
-                    dayTime: getDate(today).dayTime,
-                },
-            },
-            chats: [
-                {
-                    role: "mik",
-                    message:
-                        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-                    timestamp: {
-                        year: getDate(today).year,
-                        month: getDate(today).month,
-                        day: getDate(today).day,
-                        time: getDate(today).time,
-                        dayTime: getDate(today).dayTime,
-                    },
-                },
-                {
-                    role: "John",
-                    message:
-                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                    timestamp: {
-                        year: getDate(today).year,
-                        month: getDate(today).month,
-                        day: getDate(today).day,
-                        time: getDate(today).time,
-                        dayTime: getDate(today).dayTime,
-                    },
-                },
-            ],
-        },
-    ]);
-
-    const [pressedIndex, setPressedIndex] = useState<number | null>(null);
 
     const chatBotChats = [
         {
@@ -193,9 +90,7 @@ const ChatHeads: React.FC<props> = ({
                     }}
                 >
                     <Image
-                        source={{
-                            uri: "https://cdn-icons-png.flaticon.com/512/426/426217.png",
-                        }}
+                        source={require("@/src/assets/images/ui/photos/model-icon-01.png")}
                         style={{
                             height: HP(6),
                             aspectRatio: 1,
@@ -239,7 +134,7 @@ const ChatHeads: React.FC<props> = ({
                 Messages
             </Text>
             <View style={{}}>
-                {users.map((user, index) => {
+                {chatRooms.map((room, index) => {
                     const colorAnimationValue = useRef(
                         new Animated.Value(0)
                     ).current;
@@ -321,18 +216,14 @@ const ChatHeads: React.FC<props> = ({
                                     gap: WP(4),
                                     paddingVertical: HP(2),
                                 }}
-                                onPressIn={() =>
-                                    onPressIn(user as any, index as number)
-                                }
-                                onPressOut={() =>
-                                    onPressOut(user as any, index as number)
-                                }
+                                onPressIn={() => onPressIn(room, index)}
+                                onPressOut={() => onPressOut(room, index)}
                                 onPress={() => {
-                                    onPress(user as any);
+                                    onPress(room);
                                 }}
                             >
                                 <Image
-                                    source={user.image}
+                                    source={room.image}
                                     style={{
                                         height: HP(5),
                                         aspectRatio: 1,
@@ -355,7 +246,7 @@ const ChatHeads: React.FC<props> = ({
                                                 color: animatedTextColor,
                                             }}
                                         >
-                                            {user.firstName} {user.lastName}
+                                            {room.firstName} {room.lastName}
                                         </Animated.Text>
                                         <Animated.Text
                                             style={{
@@ -367,7 +258,7 @@ const ChatHeads: React.FC<props> = ({
                                             numberOfLines={1}
                                             ellipsizeMode="tail"
                                         >
-                                            {user.lastMessage.message}
+                                            {room.lastMessage.message}
                                         </Animated.Text>
                                     </View>
                                     <Animated.Text
@@ -380,7 +271,7 @@ const ChatHeads: React.FC<props> = ({
                                         numberOfLines={1}
                                         ellipsizeMode="tail"
                                     >
-                                        {`${user.lastMessage.timestamp.time}`}
+                                        {`${room.lastMessage.timestamp.time}`}
                                     </Animated.Text>
                                 </View>
                             </Pressable>

@@ -14,35 +14,33 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { HP, WP } from "@/src/hooks/useDeviceDimension";
 import { useThemeColors } from "@/src/hooks/useThemeColor";
 import { OutfitBold, OutfitRegular } from "@/src/hooks/useFonts";
+import { useAuth } from "@/src/services/auth/authentication";
+import HexToHexa from "@/src/hooks/useHexa";
 // import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 // import { getAuth } from "firebase/auth";
 // import { db } from "@/components/firebase/config";
 
 interface props {
-    role: string;
+    userid: string;
     text: string;
     index: number;
     chatLength: number;
     typing: boolean;
-    flag?: string;
-    user: any;
     timestamp: any;
 }
 
 const ChatBubble: React.FC<props> = ({
-    role,
+    userid,
     text,
     index,
     chatLength,
     typing,
-    user,
     timestamp,
 }) => {
     const colors = useThemeColors();
     const pressIn = () => {};
     const formattedText = formatText(text);
-
-    console.log(user, role);
+    const { user } = useAuth();
 
     // const [itemFlag, setItemFlag] = useState(flag);
     const isToday = (timestamp: any) => {
@@ -54,6 +52,8 @@ const ChatBubble: React.FC<props> = ({
             timestamp.year === today.getFullYear()
         );
     };
+
+    const match = user?.uid === userid;
 
     // const flagItem = async (value: any) => {
     //     try {
@@ -69,7 +69,7 @@ const ChatBubble: React.FC<props> = ({
                 marginBottom: index === chatLength - 1 ? HP(8) : HP(2),
                 gap: HP(1),
                 maxWidth: WP(80),
-                alignSelf: role !== user ? "flex-start" : "flex-end",
+                alignSelf: match ? "flex-end" : "flex-start",
             }}
         >
             <Pressable
@@ -79,19 +79,17 @@ const ChatBubble: React.FC<props> = ({
                     paddingHorizontal: HP(1),
                     maxWidth: WP(80),
                     justifyContent: "center",
-                    backgroundColor:
-                        role !== user ? colors.secondary : colors.accent,
-                    alignSelf: role === user ? "flex-end" : "flex-start",
-                    borderTopRightRadius: role === user ? WP(0) : WP(2),
-                    borderTopLeftRadius: role !== user ? WP(0) : WP(2),
+                    backgroundColor: match ? colors.primary : colors.secondary,
+                    alignSelf: match ? "flex-end" : "flex-start",
+                    borderTopRightRadius: match ? WP(0) : WP(2),
+                    borderTopLeftRadius: match ? WP(2) : WP(0),
                     borderRadius: WP(2),
                     borderWidth: 3,
-                    borderColor:
-                        role !== user ? colors.secondary : colors.accent,
+                    borderColor: match ? colors.primary : colors.secondary,
                     elevation: 7,
                 }}
             >
-                {typing && role !== user && index === chatLength - 1 ? (
+                {typing && !match && index === chatLength - 1 ? (
                     <Text
                         style={{
                             color: colors.text,
@@ -116,8 +114,9 @@ const ChatBubble: React.FC<props> = ({
                 ) : (
                     <RenderText
                         parts={formattedText as any}
-                        role={role}
-                        user={user}
+                        userid={userid}
+                        userId={user?.uid}
+                        match={match}
                     />
                 )}
 
@@ -126,25 +125,32 @@ const ChatBubble: React.FC<props> = ({
                         flexDirection: "row",
                         gap: HP(2),
                         width: "100%",
-                        alignSelf: role === user ? "flex-start" : "flex-end",
+                        alignSelf: match ? "flex-start" : "flex-end",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        marginTop: role !== user ? HP(1) : 0,
+                        marginTop: !match ? HP(1) : 0,
                     }}
                 >
-                    {!typing || role === user ? (
+                    {!typing || match ? (
                         <Text
                             style={{
-                                color:
-                                    role === user ? colors.white : colors.text,
-                                fontSize: HP(1.2),
-                                opacity: 0.6,
+                                color: match
+                                    ? HexToHexa({
+                                          hex: colors.white,
+                                          alpha: 0.8,
+                                      })
+                                    : HexToHexa({
+                                          hex: colors.text,
+                                          alpha: 0.8,
+                                      }),
+                                fontSize: HP(1.5),
                                 fontFamily: OutfitRegular,
                             }}
                         >
                             {isToday(timestamp)
                                 ? "Today"
-                                : `${timestamp.month} ${timestamp.date}`}{" "}
+                                : // : `${timestamp.month} ${timestamp.date}`}{" "}
+                                  ``}
                             {timestamp.time}
                         </Text>
                     ) : null}
@@ -154,15 +160,15 @@ const ChatBubble: React.FC<props> = ({
                         position: "absolute",
                         width: 0,
                         height: 0,
-                        borderBottomWidth: 5,
+                        borderBottomWidth: 14,
                         borderTopColor: "transparent",
                         borderBottomColor: "transparent",
                         top: -3,
-                        ...(role === user
+                        ...(match
                             ? {
                                   right: -10,
                                   borderLeftWidth: 10,
-                                  borderLeftColor: colors.accent,
+                                  borderLeftColor: colors.primary,
                               }
                             : {
                                   left: -10,
@@ -173,13 +179,13 @@ const ChatBubble: React.FC<props> = ({
                 />
             </Pressable>
 
-            {/* {role === "model" && index === chatLength - 1 && !typing && (
+            {/* {userid === "model" && index === chatLength - 1 && !typing && (
                 <View
                     style={{
                         flexDirection: "row",
                         gap: HP(2),
                         alignItems: "center",
-                        alignSelf: role !== "model" ? "flex-start" : "flex-end",
+                        alignSelf: userid !== "model" ? "flex-start" : "flex-end",
                         justifyContent: "center",
                     }}
                 >
@@ -201,7 +207,7 @@ const ChatBubble: React.FC<props> = ({
                                 padding: HP(0.5),
                                 borderRadius: WP(2),
                                 alignSelf:
-                                    role !== "model"
+                                    userid !== "model"
                                         ? "flex-start"
                                         : "flex-end",
                             }}
@@ -233,14 +239,15 @@ const ChatBubble: React.FC<props> = ({
 
 const RenderText = ({
     parts,
-    role,
-    user,
+    userid,
+    userId,
+    match,
 }: {
     parts: string[];
-    role: string;
-    user: string;
+    userid: string;
+    userId: string | undefined;
+    match: boolean;
 }) => {
-    const match = role === user;
     const colors = useThemeColors();
 
     return (
@@ -259,7 +266,7 @@ const RenderText = ({
                         style={[
                             {
                                 color: match ? colors.white : colors.text,
-                                fontSize: HP(1.7),
+                                fontSize: HP(1.8),
                                 fontFamily: OutfitRegular,
                             },
                             part.bold

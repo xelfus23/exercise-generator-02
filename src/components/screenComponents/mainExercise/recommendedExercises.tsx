@@ -27,7 +27,7 @@ const RecommendedExercises: React.FC<props> = ({ onItemPress }) => {
         setIndex(currentIndex);
     };
 
-    console.log("EXE TODAY", exerciseToday);
+    // console.log("EXE TODAY", exerciseToday);
 
     return (
         <View>
