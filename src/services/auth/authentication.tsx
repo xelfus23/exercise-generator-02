@@ -224,12 +224,11 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
             updateUserData(user.uid);
             calculateEverything();
         }
-    }, [user?.uid]);
+    }, [user?.uid, planData, otherPlanData]);
 
     useEffect(() => {
         setNeedsDetails(isAuthenticated && !user?.uid); // SET needsDetails here
         console.log(user);
-
         console.log({ isAuthenticated, user });
     }, [isAuthenticated, user, user?.uid]);
 
@@ -333,6 +332,8 @@ export const AuthContextProvider: React.FC<authContextProps> = ({
     };
 
     const logout = async () => {
+        setPlanData([]);
+        setOtherPlanData([]);
         setUser(null);
         setIsAuthenticated(false);
         return { success: true };

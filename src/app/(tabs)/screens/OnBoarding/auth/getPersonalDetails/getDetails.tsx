@@ -96,7 +96,6 @@ const GetDetails: React.FC = () => {
                 healthConditions
             );
             if (res.success) {
-                Alert.alert("Success!", "Workout plan created");
                 setLoading(false);
             } else {
                 Alert.alert("Error", "Registration Failed Please try again");
