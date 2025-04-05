@@ -16,21 +16,19 @@
                 "foregroundImage": "./src/assets/images/app/adaptive-icon.png",
                 "backgroundColor": "#f0f3fb"
             },
-            "package": "com.ai.fit.recommender"
+            "package": "com.ai.fit.recommender",
+            "splash": {
+                "image": "./src/assets/images/app/splash-icon.png",
+                "resizeMode": "contain",
+                "backgroundColor": "#0045f5"
+            }
         },
         "web": {
             "bundler": "metro",
             "output": "static",
             "favicon": "./src/assets/images/app/favicon.png"
         },
-        "plugins": [
-            [
-                "expo-splash-screen",
-                {
-                    "backgroundColor": "#0045f5"
-                }
-            ]
-        ],
+        "plugins": ["expo-router", "expo-splash-screen"],
         "experiments": {
             "typedRoutes": true
         },
