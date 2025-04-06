@@ -147,6 +147,7 @@ const MainStack: React.FC = () => {
                         }
                     />
                 ),
+                swipeEnabled: false,
             }}
             drawerContent={(props) => (
                 <View

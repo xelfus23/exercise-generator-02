@@ -1,24 +1,18 @@
-import { Link, Stack } from 'expo-router';
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { OutfitRegular } from "../hooks/useFonts";
+import { useThemeColors } from "../hooks/useThemeColor";
 
 export default function NotFoundScreen() {
-  return (
-    <>
+    const colors = useThemeColors();
 
-    </>
-  );
+    return (
+        <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+            <Text style={{ fontFamily: OutfitRegular, color: colors.text }}>
+                Page not found.
+            </Text>
+        </View>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-});

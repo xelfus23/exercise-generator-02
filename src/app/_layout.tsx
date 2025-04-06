@@ -4,28 +4,24 @@ import {
     ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, Stack, useRouter, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { SafeAreaView, useColorScheme } from "react-native";
 import { AuthContextProvider, useAuth } from "../services/auth/authentication";
-import { NavigationContainer } from "@react-navigation/native";
 import MainLayout from "./(tabs)/navigation/Main";
 import { useThemeColors } from "../hooks/useThemeColor";
-import { HP, WP } from "../hooks/useDeviceDimension";
 import { StatusBar } from "react-native";
 import React from "react";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
 
     const [loaded] = useFonts({
-        OutfitRegular: require("../assets/fonts/Outfit-Regular.ttf"),
-        OutfitBold: require("../assets/fonts/Outfit-Bold.ttf"),
+        OutfitRegular: require("@/src/assets/fonts/outfit-regular.ttf"),
+        OutfitBold: require("@/src/assets/fonts/outfit-bold.ttf"),
     });
 
     useEffect(() => {

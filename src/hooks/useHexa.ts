@@ -1,28 +1,39 @@
-import tinycolor, { Instance as TinycolorInstance } from "tinycolor2";
-
-interface Props {
-    hex: string;
-    alpha: number;
+interface HexToHexaProps {
+    hex: string; // The hex color code (e.g., "#FF0000")
+    alpha: number; // The alpha value (0 to 1)
 }
 
-const HexToHexa = ({ hex, alpha = 1 }: Props): string => {
-    // Return string directly, handle null internally
-    const color = tinycolor(hex);
+const HexToHexa = ({ hex, alpha }: HexToHexaProps): string => {
+    // 1. Remove the '#' character (if present)
+    const cleanHex = hex.startsWith("#") ? hex.slice(1) : hex;
 
-    if (!color.isValid()) {
-        console.warn(`Invalid hex color: ${hex}`); // More informative warning
-        return "#000000"; // Return black, or some other default, instead of null
-    }
-
-    if (alpha < 0 || alpha > 1) {
+    // 2. Validate the hex code format
+    if (cleanHex.length !== 3 && cleanHex.length !== 6) {
         console.warn(
-            `Alpha value must be between 0 and 1.  Received: ${alpha}`
+            "Invalid hex code format.  Must be 3 or 6 characters (without #). Returning transparent black."
         );
-        return color.toHex8String(); // Return original with full opacity if alpha is invalid
+        return "#00000000"; // Or throw an error, depending on your needs
     }
 
-    // tinycolor has built-in methods for this!
-    return color.setAlpha(alpha).toHex8String();
+    // 3. Expand shorthand hex codes (e.g., "F0F" to "FF00FF")
+    const expandedHex =
+        cleanHex.length === 3
+            ? cleanHex[0] +
+              cleanHex[0] +
+              cleanHex[1] +
+              cleanHex[1] +
+              cleanHex[2] +
+              cleanHex[2]
+            : cleanHex;
+
+    // 4. Convert alpha to a hexadecimal value (00 to FF)
+    const alphaHex = Math.round(alpha * 255)
+        .toString(16)
+        .padStart(2, "0")
+        .toUpperCase();
+
+    // 5. Combine the hex color with the alpha value
+    return `#${expandedHex}${alphaHex}`;
 };
 
 export default HexToHexa;

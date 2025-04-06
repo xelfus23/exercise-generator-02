@@ -6,7 +6,15 @@
         "paths": {
             "@/*": ["./*"]
         },
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        // Add these lines to override the base config:
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "esnext",
+
+        // Keep these existing settings:
+        "skipLibCheck": true,    // Add this if you're still facing type errors
+        "forceConsistentCasingInFileNames": true
     },
     "include": [
         "**/*.ts",
